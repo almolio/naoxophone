@@ -1,0 +1,2 @@
+set(tutorial7_MESSAGE_FILES "msg/blinkAction.msg;msg/blinkActionGoal.msg;msg/blinkActionResult.msg;msg/blinkActionFeedback.msg;msg/blinkGoal.msg;msg/blinkResult.msg;msg/blinkFeedback.msg")
+set(tutorial7_SERVICE_FILES "")

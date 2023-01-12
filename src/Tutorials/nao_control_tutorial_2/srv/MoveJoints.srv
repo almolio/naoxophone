@@ -1,0 +1,18 @@
+#CREATE request parameters
+string joint_name
+string x_pos
+string y_pos
+string z_pos
+string x_rot
+string y_rot
+string z_rot
+string max_vel
+string exe_time
+--------------------------------
+#CREATE response parameters
+float32 x_pos
+float32 y_pos
+float32 z_pos
+float32 x_rot
+float32 y_rot
+float32 z_rot

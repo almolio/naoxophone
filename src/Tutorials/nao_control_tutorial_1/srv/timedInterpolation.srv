@@ -1,0 +1,8 @@
+#CREATE request parameters
+string      names
+string      angleLists 
+string      times
+
+--------------------------------
+#CREATE response parameters
+float32    angle

@@ -1,0 +1,4 @@
+TASK 7 MEANSHIFT AND CAMSHIFT
+
+Meanshift and Camshift are two algorithms for object tracking in videos. The meanshift algorithm takes the initial position of the target and a histogram of the backprojected image and returns a tracking window that follows the object by shifting the tracking window towards the area of the image where the density of points is highest, which corresponds to the object thanks to the histogram backprojection.
+CAMShift stands for Continously Adaptive Meanshift and it adjusts the window size to the size and rotation of the target. In the meanshift algorithm, the rectangle surrounding the object has the same size and rotation regardless of the position of the object. With CAMShift we can make the rectangle bigger when the object is closer to the camera and smaller when it's farther away. It also adapts to the rotation of the object. Camshift first calculates the meanshift and then adjusts the window size and orientation.

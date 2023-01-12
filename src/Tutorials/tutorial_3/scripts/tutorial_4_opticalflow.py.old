@@ -1,0 +1,111 @@
+#!/usr/bin/env python
+
+import rospy
+import sys
+import cv2
+from std_msgs.msg import String
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge, CvBridgeError
+import numpy as np 
+from pathlib import Path
+import matplotlib.pyplot as plt
+import argparse
+
+class tutorial_4_opticalflow:
+    def __init__(self):
+
+        # Subscribe to the top camera 
+        self.bridge = CvBridge()
+        self.image_sub = rospy.Subscriber("/nao_robot/camera/top/camera/image_raw",Image,self.callback)
+        
+       
+
+    def callback(self, data):
+        try:
+            cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+        except CvBridgeError as e:
+            print(e)
+        
+        #Take first image and find corners in it
+        feature_params = dict( maxCorners = 100,
+                       qualityLevel = 0.1,
+                       minDistance = 10)
+
+        lk_params = dict( winSize  = (21, 21),
+                        maxLevel = 2,
+                        criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
+        track_object = False #Still haven't detected the corner points, DON'T start optical flow trackin
+        cv2.imshow('Original Image', cv_image)
+        #new_img = cv_image.copy()
+        img_gray = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
+        new_img_gray = img_gray.copy()
+       
+        
+        if not track_object:
+            print('Detect corners')
+
+            cv2.imshow('Gray Image', img_gray)
+            old_gray = img_gray.copy()
+            corners = cv2.goodFeaturesToTrack(old_gray, mask = None, **feature_params)
+            corners = np.float32(corners)
+            # Iterate over the corners and draw a circle at that location
+            for i in corners:
+                x,y = i.ravel()
+                cv2.circle(cv_image,(x,y),2,(0,0,255),-1)
+            cv2.imshow("Corners", cv_image)
+            k = cv2.waitKey(3)
+            if k!=-1:    # Any key to stop
+                print('Finish corner detection, start tracking')
+                track_object = True
+
+        if track_object:
+            while(not rospy.is_shutdown()):
+                #Calculate optical flow
+                print('OPTICAL FLOW')
+                new_img=cv_image.copy() #Replaced by new image from the feed
+                new_img_gray = cv2.cvtColor(new_img, cv2.COLOR_BGR2GRAY)
+                mask = np.zeros_like(new_img_gray)
+                new_corners, st, err = cv2.calcOpticalFlowPyrLK(old_gray, new_img_gray, corners, None, **lk_params)
+                # Select good points
+                good_new = new_corners[st == 1]
+                good_old = corners[st == 1]
+                print('Draw lines')
+                # Draw the tracks
+                color = np.random.randint(0, 255, (100, 3)) #random colours, 100 = maxCorners
+                for i, (new, old) in enumerate(zip(good_new, good_old)):
+                    a, b = new.ravel()
+                    c, d = old.ravel()
+                    mask = cv2.line(mask, (int(a), int(b)), (int(c), int(d)), color[i].tolist(), 2)
+                    new_img = cv2.circle(new_img, (int(a), int(b)), 5, color[i].tolist(), -1)
+            
+                # Display the demo
+                mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
+                img_optflow = cv2.add(new_img, mask)
+                cv2.imshow("Image OpticalFlow", img_optflow) 
+                corners = good_new.reshape(-1, 1, 2)
+                # if cv2.waitKey(1) == 13: #Enter Key
+                #     track_object = False
+                k = cv2.waitKey(3)
+                if k==27:    # Esc key to stop
+                    print('Finish tracking')
+                    track_object = False
+                    break
+        # Update the previous frame and previous points
+            old_gray = new_img_gray.copy()
+
+
+
+    
+        cv2.waitKey(3)
+        
+def main(args):
+    ic = tutorial_4_opticalflow()
+    rospy.init_node('tutorial_4_opticalflow', anonymous=True)
+    try:
+        rospy.spin()
+    except KeyboardInterrupt: 
+        print("Shutting down")
+    cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+	main(sys.argv)

@@ -1,0 +1,16 @@
+# Goal 
+
+std_msgs/ColorRGBA[] colors  
+std_msgs/ColorRGBA bg_color  ## background  
+duration blink_duration
+float32 blink_rate_mean
+float32 blink_rate_sd
+
+---
+# Result 
+bool still_blinking
+
+---
+
+# Feedback 
+std_msgs/ColorRGBA last_color
