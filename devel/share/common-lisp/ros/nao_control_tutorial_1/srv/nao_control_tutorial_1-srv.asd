@@ -4,8 +4,8 @@
 (defsystem "nao_control_tutorial_1-srv"
   :depends-on (:roslisp-msg-protocol :roslisp-utils )
   :components ((:file "_package")
-    (:file "jointAngle" :depends-on ("_package_jointAngle"))
-    (:file "_package_jointAngle" :depends-on ("_package"))
-    (:file "timedInterpolation" :depends-on ("_package_timedInterpolation"))
-    (:file "_package_timedInterpolation" :depends-on ("_package"))
+    (:file "InterpolateJoints" :depends-on ("_package_InterpolateJoints"))
+    (:file "_package_InterpolateJoints" :depends-on ("_package"))
+    (:file "MoveJoints" :depends-on ("_package_MoveJoints"))
+    (:file "_package_MoveJoints" :depends-on ("_package"))
   ))

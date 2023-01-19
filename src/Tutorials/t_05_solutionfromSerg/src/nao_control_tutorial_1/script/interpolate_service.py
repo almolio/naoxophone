@@ -89,7 +89,7 @@ def interpolate_server():
 
 
 if __name__ == '__main__':
-    with open('/home/hrsa/t_05/src/nao_control_tutorial_1/script/joint_limits_DEG.json', 'rb') as f:
+    with open('/home/hrsb/MSNE_HRS/catkin_ws/src/Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1/script/joint_limits_DEG.json', 'rb') as f:
         limits = json.load(f)
 
     robotIP=str(os.getenv("NAO_IP"))
