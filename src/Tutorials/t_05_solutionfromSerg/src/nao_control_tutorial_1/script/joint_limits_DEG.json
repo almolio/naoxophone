@@ -1,0 +1,16 @@
+{
+    "HeadYaw":          [-119.5, 119.5],
+    "HeadPitch":        [-38.5, 29.5],
+    "LShoulderPitch":   [-119.5, 119.5],
+    "LShoulderRoll":    [-18, 76],
+    "LElbowYaw":        [-119.5, 119.5],
+    "LElbowRoll":       [-88.5, -2],
+    "LWristYaw":        [-104.5, 104.5],
+    "LHand":            [0,1],
+    "RShoulderPitch":   [-119.5, 119.5],
+    "RShoulderRoll":    [-76, 18],
+    "RElbowYaw":        [-119.5, 119.5],
+    "RElbowRoll":       [ 2, 88.5],
+    "RWristYaw":        [-104.5, 104.5],
+    "RHand":            [0,1]
+}

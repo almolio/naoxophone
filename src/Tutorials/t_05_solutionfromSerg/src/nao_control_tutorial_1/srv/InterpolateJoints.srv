@@ -1,0 +1,13 @@
+#request parameters
+
+string[] joint_names
+int32[] steps
+float32[] angles
+float32[] times
+bool relative
+bool blocking
+
+--------------------------------
+#response parameters
+
+bool status

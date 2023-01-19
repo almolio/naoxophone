@@ -1,0 +1,79 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/hrsa/t_05/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_bcc73/fast"
+/usr/bin/make -f CMakeFiles/cmTC_bcc73.dir/build.make CMakeFiles/cmTC_bcc73.dir/build
+make[1]: Entering directory '/home/hrsa/t_05/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libcrypto.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+Building C object CMakeFiles/cmTC_bcc73.dir/CheckSymbolExists.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_bcc73.dir/CheckSymbolExists.c.o   -c /home/hrsa/t_05/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libcrypto.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+Linking C executable cmTC_bcc73
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bcc73.dir/link.txt --verbose=1
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libcrypto.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cc       CMakeFiles/cmTC_bcc73.dir/CheckSymbolExists.c.o  -o cmTC_bcc73 -rdynamic 
+CMakeFiles/cmTC_bcc73.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_bcc73.dir/build.make:97: recipe for target 'cmTC_bcc73' failed
+make[1]: *** [cmTC_bcc73] Error 1
+make[1]: Leaving directory '/home/hrsa/t_05/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_bcc73/fast' failed
+make: *** [cmTC_bcc73/fast] Error 2
+
+File /home/hrsa/t_05/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/hrsa/t_05/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_d1814/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d1814.dir/build.make CMakeFiles/cmTC_d1814.dir/build
+make[1]: Entering directory '/home/hrsa/t_05/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libcrypto.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+Building C object CMakeFiles/cmTC_d1814.dir/CheckFunctionExists.c.o
+/usr/bin/cc    -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_d1814.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libcrypto.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+Linking C executable cmTC_d1814
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d1814.dir/link.txt --verbose=1
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cmake: /home/hrsa/pynaoqi/libcrypto.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_d1814.dir/CheckFunctionExists.c.o  -o cmTC_d1814 -rdynamic -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_d1814.dir/build.make:97: recipe for target 'cmTC_d1814' failed
+make[1]: *** [cmTC_d1814] Error 1
+make[1]: Leaving directory '/home/hrsa/t_05/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_d1814/fast' failed
+make: *** [cmTC_d1814/fast] Error 2
+
+
