@@ -1,0 +1,8 @@
+prefix=/home/hrsb/MSNE_HRS/catkin_ws/install
+
+Name: naoXophone
+Description: Description of naoXophone
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
