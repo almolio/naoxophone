@@ -12,6 +12,8 @@ import tf
 import numpy as np
 import math
 import motion
+
+# roslauch nao_apps tactile.launch
 # docs: http://doc.aldebaran.com/2-4/naoqi/motion/control-joint-api.html 
 # carteasian control http://doc.aldebaran.com/2-1/naoqi/motion/control-cartesian.html
 # http://doc.aldebaran.com/2-1/naoqi/motion/control-cartesian-api.html#ALMotionProxy::positionInterpolations__AL::ALValueCR.AL::ALValueCR.AL::ALValueCR.AL::ALValueCR.AL::ALValueCR
@@ -28,10 +30,11 @@ class grabSticks:
         # self.joint_sub = rospy.Subscriber('joint_states', JointState, self.joint_state_callback)
         self.head_sub = rospy.Subscriber("/tactile_touch", HeadTouch, self.headtouch_callback)
 
-        self.rightarm = ["RShoulderPitch","RShoulderRoll","RElbowYall","RElbowRoll","RWristYall","Rhand"]
-        self.leftarm = ["LShoulderPitch","LShoulderRoll","LElbowYall","LElbowRoll","LWristYall","Lhand"]
-        self.botharms = [*self.rightarm, *self.leftarm]
-        self.joint_sequence_start = self.motionProxy.getAngles(names=self.rightarm, useSensors=True)
+        self.rightarm = ["RShoulderPitch","RShoulderRoll","RElbowYaw","RElbowRoll","RWristYaw"]
+        self.leftarm = ["LShoulderPitch","LShoulderRoll","LElbowYaw","LElbowRoll","LWristYaw"]
+        # self.botharms = [*self.rightarm, *self.leftarm]
+        self.botharms = self.leftarm
+        self.joint_sequence_start = self.motionProxy.getAngles(self.botharms, True) # names , useSensors
         print("Initial Position Recorded")
         print("Place the hand on the joystick and press head button")
         self.joint_sequence_end = []
@@ -39,13 +42,14 @@ class grabSticks:
 
         ## Camera for fine grasping
         self.tflistener = tf.TransformListener()
+        self.tfbroadcaster = tf.TransformBroadcaster()
 
 
     def run(self): 
         # Position the Nao 
         # Let press the Head Button to start joint recording 
         if self.headtouch.button is 1 and self.headtouch.state is 1:
-            self.joint_sequence_end = self.motionProxy.getAngles(names=self.botharms, useSensors=True)
+            self.joint_sequence_end = self.motionProxy.getAngles(self.botharms, True)
             print("Hand and joystick is recorded.")
         # Write these joint state into a file (So we could update this in the future-- Calibration)    
 
@@ -54,7 +58,7 @@ class grabSticks:
         if self.headtouch.button is 2 and self.headtouch.state is 1: 
             self.send_movement(self.joint_sequence_start)
             self.send_movement(self.joint_sequence_end)
-
+            print("Moving to stick")
 
         if self.headtouch.button is 3 and self.headtouch.state is 1: 
            self.send_cartesian_movement()
@@ -68,7 +72,7 @@ class grabSticks:
     def get_pose_from_mat(self, mat):
 
         # scale, shear, angles, trans, persp = decompose_matrix(S)
-        _,_,angles, trans,_ = tf.transforms.decompose(mat)
+        _,_,angles, trans,_ = tf.transformations.decompose(mat)
         # Check the output of this pose to see if it's correct 
         return list(trans,angles)
 
@@ -107,12 +111,12 @@ class grabSticks:
             Input the final position that we want the robot to be in 
             Specify weather or not the robot should stay stiff afterwards.
         '''
-        self.motionProxy.setstiffnesses(self.botharms, [1.0 for i in self.botharms])
+        self.motionProxy.setStiffnesses(self.botharms, [1.0 for i in self.botharms])
         fractionMaxSpeed = 0.2
         self.motionProxy.setAngles(self.botharms, position, fractionMaxSpeed)
 
         if not stay_stiff: 
-            self.motionProxy.setstiffnesses(self.botharms, [0.0 for i in self.botharms])
+            self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
 
         # print(req, type(req.joint_name), type(req.angle), type(req.speed))
 
@@ -147,7 +151,7 @@ class grabSticks:
             self.broadcast_target_tf("/CameraBottom_frame", "/aruco_to_camera", H_aruco_to_camera)
             
             useSensorValues=True
-            H_camera_to_torso = self.motionProxy.getTARUCOFRAMEransform("CameraBottom",
+            H_camera_to_torso = self.motionProxy.getTransform("CameraBottom",
                                 motion.FRAME_TORSO, useSensorValues)
             H_camera_to_torso = np.asarray(H_camera_to_torso).reshape([4,4])
             print("H_camera_to_torso \n {}".format(H_camera_to_torso))           
@@ -165,10 +169,20 @@ class grabSticks:
     def handle_of_stick(self):
         aruco_torso = self.get_aruco_frame()
         # TODO: add the right hand adjustment for each hand
-        hand_adjustment = tf.transformations.compose_matrix(translation = [0,0,0])
+        hand_adjustment = tf.transformations.compose_matrix(translate=[0,0,0])
         handle_world = aruco_torso - hand_adjustment
         return handle_world
     
+    def broadcast_target_tf(self, parent_frame, child_frame, homogeneous_mat):
+        rvec = tf.transformations.euler_from_matrix(homogeneous_mat)
+        tvec = homogeneous_mat[:3,3]
+        self.tfbroadcaster.sendTransform(
+                translation=tvec.squeeze(), 
+                rotation= tf.transformations.quaternion_from_euler(rvec[0], rvec[1], rvec[2]), 
+                time = rospy.get_rostime(),
+                child = child_frame,
+                # parent = 'TOPCAMERAFRAME')
+                parent= parent_frame)
 
 def main():
     # TODO: ESTABLISH THE JOINT LIMITS? 
