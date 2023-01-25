@@ -38,17 +38,15 @@ class notePositions:
         self.postureProxy = ALProxy('ALRobotPosture', naoIP, PORT)
         self.notesTargets=np.zeros((8,6))
         self.notesPositions = np.zeros((8,6))
-        self.notesPositions[0,:] = np.array([0.1839270293712616, 0.1935415416955948, 0.043190956115722656, -0.05606847256422043, -0.037899136543273926, 0.397024542093277])
-        self.notesTargets[0,:] = np.array([0.17106272280216217, 0.19319814443588257, 0.01128946803510189, 0.30095362663269043, 0.13278625905513763, 0.36690160632133484])
         #self.postureProxy.goToPosture("Crouch", 0.5)
-        #self.motionProxy.setStiffnesses(1.0)
-        # #self.grabStick()
-        # self.motionProxy.openHand('LHand')
+        #self.motionProxy.setStiffnesses("LArm",0.0) #Disable stiffness in the arm
+        #self.motionProxy.openHand('LHand')
+        # self.motionProxy.setStiffnesses("LArm", 1.0) #Enable stiffness in the arm
+        self.motionProxy.setStiffnesses("LArm", 0.0)
         # time.sleep(2)
-        self.motionProxy.closeHand("LHand")
-        self.motionProxy.setStiffnesses("LArm", 1.0)
-        # time.sleep(10)
-
+        # self.motionProxy.closeHand("LHand")
+        # self.motionProxy.setStiffnesses("LArm", 1.0) #Enable stiffness in the arm
+        # time.sleep(2)   
         # # Subscribe to the camera 
         # self.bridge = CvBridge()
         # self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
@@ -69,184 +67,242 @@ class notePositions:
         cv2.waitKey(3)
         
 
-    def recordJointState(self,chainName): 
-        frame= motion.FRAME_ROBOT
-        useSensor = False
-        current_position = self.motionProxy.getPosition(chainName, frame, useSensor)
-        print(type(current_position))
-        return current_position
-
-    def playNote(self,notePosition,noteTarget):
-        #self.motionProxy.closeHand("LHand")
+    def recordTransform(self,chainName): 
         chainName = "LArm"
-        frame     = motion.FRAME_ROBOT
-        useSensor = False
-        fractionMaxSpeed = 0.7
-        axisMask         = 63 # just control position
-        print("move arm")
-        current = self.recordJointState("LArm")
-        print(current)
-        self.motionProxy.setPositions(chainName, frame, notePosition, fractionMaxSpeed, axisMask)
-        time.sleep(0.5)
-        print("Hit note")
-        self.motionProxy.setPositions(chainName, frame, noteTarget, fractionMaxSpeed, axisMask)
-        current = self.recordJointState("LArm")
-        print(current)
-        time.sleep(0.5)
-        self.motionProxy.setPositions(chainName, frame, notePosition, fractionMaxSpeed, axisMask)
-        time.sleep(2)
+        frame = motion.FRAME_ROBOT
+        useSensorValues = False
+        tf = almath.Transform(self.motionProxy.getTransform(chainName,frame,useSensorValues))
+        return tf
+
+    # def playNote(self,notePosition,noteTarget):
+    #     #self.motionProxy.closeHand("LHand")State("LArm")
+    #     useSensor = False
+    #     fractionMaxSpeed = 0.7
+    #     axisMask         = 63 # just control position
+    #     print("move arm")
+    #     current = self.recordJointState("LArm")
+    #     print(current)
+    #     self.motionProxy.setPositions(chainName, frame, notePosition, fractionMaxSpeed, axisMask)
+    #     time.sleep(0.5)
+    #     print("Hit note")
+    #     self.motionProxy.setPositions(chainName, frame, noteTarget, fractionMaxSpeed, axisMask)
+    #     current = self.recordJointState("LArm")
+    #     print(current)
+    #     time.sleep(0.5)
+    #     self.motionProxy.setPositions(chainName, frame, notePosition, fractionMaxSpeed, axisMask)
+    #     time.sleep(2)
+
+
+    def playNote1(self,rhythm):
+        """
+        Plays the first note (C)
+        """
+        chainName = "LArm"
+        frame = motion.FRAME_ROBOT
+        # transform_note_1 = [0.85052, -0.520852, 0.073002, 0.150683,
+        #                     0.520812, 0.853411, 0.0210918, 0.232483,
+        #                     -0.0732864, 0.0200814, 0.997109, 0.272251]
+
+        transform_note_1  = [0.949419, -0.313825, -0.010873, 0.165477,
+                            0.314006, 0.949064, 0.0260411, 0.178851,
+                            0.00214686, -0.0281381, 0.999602, 0.286437]
+
+
+        # transform_hit_note1 = [0.807697, -0.513714, 0.289352, 0.135345,
+        #                     0.546821, 0.836205, -0.0418006, 0.234763,
+        #                     -0.220484, 0.191986, 0.95631, 0.244178]
+
+        transform_hit_note1 = [0.900836, -0.32807, 0.284367, 0.162335,
+                                0.335875, 0.941641, 0.0223509, 0.183376,
+                                -0.275105, 0.0753773, 0.958455, 0.232225]
+
+
+        # transform_hit_note1   =[0.896099, -0.226726, 0.381578, 0.163841,
+        #                         0.315852, 0.929728, -0.189322, 0.221143,
+        #                         -0.31184, 0.290173, 0.904741, 0.242694]
+        fractionMaxSpeed = 0.5
+        axisMask         = 63
+
+        self.motionProxy.setTransforms(chainName, frame, transform_note_1, fractionMaxSpeed, axisMask)
+        time.sleep(rhythm)
+        self.motionProxy.setTransforms(chainName, frame, transform_hit_note1, fractionMaxSpeed, axisMask)
+        time.sleep(rhythm)
+        self.motionProxy.setTransforms(chainName, frame, transform_note_1, fractionMaxSpeed, axisMask)
+        time.sleep(rhythm)
+
+
+    def playNote2(self,rhythm):
+        """
+        Plays the second note (D)
+        """
+        chainName = "LArm"
+        frame = motion.FRAME_ROBOT
     
+        # tf_note2 = [0.943839, -0.3301, -0.0142126, 0.189212,
+        #                 0.319573, 0.922972, -0.214465, 0.191913,
+        #                 0.0839126, 0.197878, 0.976628, 0.298834]
+
+        tf_note2 =   [0.976792, -0.148592, -0.154264, 0.189376,
+                        0.157645, 0.986321, 0.0481477, 0.196902,
+                        0.144999, -0.0713492, 0.986856, 0.308583]
+
+        # tf_hit_note2  = [0.929485, -0.268685, 0.252719, 0.173369,
+        #             0.321279, 0.926305, -0.19682, 0.191384,
+        #             -0.181213, 0.264135, 0.947309, 0.247428]
+
+        tf_hit_note2 =  [0.949037, -0.219455, 0.226203, 0.172691,
+                            0.220388, 0.975177, 0.0214444, 0.19085,
+                            -0.225294, 0.0295009, 0.973844, 0.234601]
+
+        fractionMaxSpeed = 0.5
+        axisMask         = 63
+        self.motionProxy.setTransforms(chainName, frame, tf_note2, fractionMaxSpeed, axisMask)
+        time.sleep(rhythm)
+        self.motionProxy.setTransforms(chainName, frame, tf_hit_note2, fractionMaxSpeed, axisMask)
+        time.sleep(rhythm)
+        self.motionProxy.setTransforms(chainName, frame, tf_note2, fractionMaxSpeed, axisMask)
+        time.sleep(rhythm)
+
+
+
+
+    def playNote3(self,rhythm):
+        """
+        Plays the 3rd note (E)
+        """
+        chainName = "LArm"
+        frame = motion.FRAME_ROBOT
+
+
+        # tf_note3 = [0.943839, -0.3301, -0.0142126, 0.189212,
+        #                 0.319573, 0.922972, -0.214465, 0.191913,
+        #                 0.0839126, 0.197878, 0.976628, 0.298834]
+
+        tf_note3 =  [0.972296, -0.0507622, -0.228175, 0.212427,
+                    0.0643889, 0.996534, 0.0526741, 0.128898,
+                    0.22471, -0.0659067, 0.972194, 0.317382]
+
+        # tf_hit_note3  = [0.929485, -0.268685, 0.252719, 0.173369,
+        #             0.321279, 0.926305, -0.19682, 0.191384,
+        #             -0.181213, 0.264135, 0.947309, 0.247428]
+
+
+        tf_hit_note3 = [0.973216, -0.143818, 0.179354, 0.186463,
+                        0.143313, 0.989551, 0.0158403, 0.146873,
+                        -0.179758, 0.0102878, 0.983657, 0.236318]
+
+
+        fractionMaxSpeed = 0.5
+        axisMask         = 63
+        self.motionProxy.setTransforms(chainName, frame, tf_note3, fractionMaxSpeed, axisMask)
+        time.sleep(rhythm)
+        self.motionProxy.setTransforms(chainName, frame, tf_hit_note3, fractionMaxSpeed, axisMask)
+        time.sleep(rhythm)
+        self.motionProxy.setTransforms(chainName, frame, tf_note3, fractionMaxSpeed, axisMask)
+        time.sleep(rhythm)
+
+    def playNote4(self,rhythm):
+        """
+        Plays the 4th note (F)
+        """
+        chainName = "LArm"
+        frame = motion.FRAME_ROBOT
+        # tf_note4 = [0.986033, -0.152749, -0.0663784, 0.204328,
+        #             0.143969, 0.982109, -0.12139, 0.153151,
+        #             0.0837329, 0.110138, 0.990383, 0.294098]
+
+        tf_note4 = [0.980718, 0.0570774, -0.186906, 0.214758,
+                    -0.0425361, 0.995813, 0.0809101, 0.105312,
+                    0.190741, -0.0713998, 0.97904, 0.309327]
+
+        # tf_hit_note4 = [0.962463, -0.150178, 0.226077, 0.183066,
+        #                 0.201723, 0.953092, -0.225661, 0.166794,
+        #                 -0.181583, 0.262795, 0.947611, 0.242724]
+
+        tf_hit_note4 =   [0.983279, -0.0134404, 0.181609, 0.191637,
+                        0.00214976, 0.99806, 0.062224, 0.115612,
+                        -0.182093, -0.0607932, 0.9814, 0.233236]
+
+
+        fractionMaxSpeed = 0.5
+        axisMask         = 63
+        self.motionProxy.setTransforms(chainName, frame, tf_note4, fractionMaxSpeed, axisMask)
+        time.sleep(rhythm)
+        self.motionProxy.setTransforms(chainName, frame, tf_hit_note4, fractionMaxSpeed, axisMask)
+        time.sleep(rhythm)
+        self.motionProxy.setTransforms(chainName, frame, tf_note4, fractionMaxSpeed, axisMask)
+        time.sleep(rhythm)
 
     def run(self):
-        # self.motionProxy.setStiffnesses("LArm", 1.0)
+        self.motionProxy.setStiffnesses("LArm", 1.0)
         time.sleep(4)
-        # time.sleep(5)
-        # print("note_position")
-        # current = self.recordJointState("LArm")
-        # print(current)
-        # time.sleep(5)
-        # print("hitnote")
-        # current = self.recordJointState("LArm")
-        # print(current)
+        current = self.recordTransform("LArm")
+        print("Transform")
+        print(current)
 
-        # # # Example showing how to set Torso Transform, using a fraction of max speed
-        chainName        = "LArm"
-        frame            = motion.FRAME_ROBOT
+        # #self.playInterpolated1
+        # self.playNote1(2)
+        # self.playNote2(2)
+        # self.playNote3(2)
+        # self.playNote4(2)
 
-        # # """ Transform
+
+        # # # """ Transform
         # # // R R R x
         # # // R R R y
         # # // R R R z
         # # // 0 0 0 1
         # # """
-        transform        = [1.0, 0.0, 0.0, 0.40,    
-                            0.0, 1.0, 0.0, 0.35,
-                            0.0, 0.0, 1.0, 0.35]
-
-        transform_hit   = [1.0, 0.0, 0.0, 0.40,    
-                            0.0, 1.0, 0.0, 0.35,
-                            0.0, 0.0, 1.0, 0.25]
-
-        transfor_2        = [1.0, 0.3, 0.0, 0.40,    
-                            0.3, 1.0, 0.0, 0.25,
-                            0.0, 0.0, 1.0, 0.35]
-
-        transform_hit_2   = [1.0, 0.0, 0.0, 0.45,    
-                            0.0, 1.0, 0.0, 0.25,
-                            0.0, 0.0, 1.0, 0.25]
-
-        transform_note1   =  [0.842626, -0.412946, 0.345625, 0.149998,
-                            0.357341, 0.908939, 0.214793, 0.210217,
-                            -0.40285, -0.0574843, 0.913459, 0.278304]
-
-        transform_hit_note1   =  [0.842626, -0.412946, 0.345625, 0.149998,
-                            0.357341, 0.908939, 0.214793, 0.200217,
-                            -0.40285, -0.0574843, 0.913459, 0.218304]
-
-        transform_hit_note1   =[0.896099, -0.226726, 0.381578, 0.163841,
-                            0.315852, 0.929728, -0.189322, 0.221143,
-                            -0.31184, 0.290173, 0.904741, 0.242694]
-
-
-        tf_note2   =  [0.842626, -0.412946, 0.345625, 0.149998,
-                            0.357341, 0.908939, 0.214793, 0.220217,
-                            -0.40285, -0.0574843, 0.913459, 0.218304]
-
-        tf_hit2   =[0.896099, -0.226726, 0.381578, 0.163841,
-                            0.315852, 0.929728, -0.189322, 0.221143,
-                            -0.31184, 0.290173, 0.904741, 0.182694]
-
-
+        chainName = "LArm"
+        frame = motion.FRAME_ROBOT
+        transform_note_1 = [1, 0, 0, 0,
+                            0, 0.866, -0.5, 0,
+                            0, 0.5, 0.866, -0.05]
 
         fractionMaxSpeed = 0.5
         axisMask         = 63
-        useSensorValues = False
-
-        # print("Init")
-        self.motionProxy.setTransforms(chainName, frame, transform_note1, fractionMaxSpeed, axisMask)
-        time.sleep(4)
-        self.motionProxy.setTransforms(chainName, frame, transform_hit_note1, fractionMaxSpeed, axisMask)
-        print("Hit note")
-        # self.motionProxy.setTransforms(chainName, frame, transform_hit, fractionMaxSpeed, axisMask)
-        # # self.motionProxy.setTransforms(chainName, frame, transform, fractionMaxSpeed, axisMask)
-        # # time.sleep(4)
-        # # self.motionProxy.setTransforms(chainName, frame, transform, fractionMaxSpeed, axisMask)
-        # print("Move Finished")
-        # time.sleep(4)
-
-
-        # print("Init 2")
-        # self.motionProxy.setTransforms(chainName, frame, transfor_2, fractionMaxSpeed, axisMask)
-        # time.sleep(4)
-        # print("Hit 2")
-        # self.motionProxy.setTransforms(chainName, frame, transform_hit_2, fractionMaxSpeed, axisMask)
-        # # time.sleep(4)
-        # # self.motionProxy.setTransforms(chainName, frame, transfor_2, fractionMaxSpeed, axisMask)
-        # print("Move 2 Finished")
-        # time.sleep(4)
+        self.motionProxy.setTransforms(chainName, frame, transform_note_1, fractionMaxSpeed, axisMask)
 
 
 
-        # # Motion of Arms with block process
-        # effectorList = ["LArm"]
-        # axisMaskList = [motion.AXIS_MASK_VEL]
-        # timeList     = [[1.0, 2.0, 3.0]]         # seconds
 
-        # # targetLArmTf = [1.0, 0.0, 0.0, 0.40,    
-        # #                 0.0, 1.0, 0.0, 0.35,
-        # #                 0.0, 0.0, 1.0, 0.35]
-        # dz = 0.05
 
-        # pathList = []
-        # targetLArmTf = almath.Transform(transform)
-        # pathList.append(list(targetLArmTf.toVector()))
-        # #targetLArmTf = almath.Transform(self.motionProxy.getTransform("LArm", frame, useSensorValues))
-        # #Point 1
-        # targetLArmTf = almath.Transform(transform_hit)
-        # targetLArmTf.r3_c4 -= dz
-        # pathList.append(list(targetLArmTf.toVector()))
+    def playInterpolated1(self,rythm):
+        # Motion of Arms with block process
+        frame = motion.FRAME_ROBOT
+        effectorList = ["LArm"]
+        axisMaskList = [motion.AXIS_MASK_VEL]
+        timeList     = [[0.5, 1.0, 1.5, 2.0, 2.5, 3.0]]         # seconds
+
+
+        transform_note_1 = [0.85052, -0.520852, 0.073002, 0.150683,
+                            0.520812, 0.853411, 0.0210918, 0.232483,
+                            -0.0732864, 0.0200814, 0.997109, 0.272251]
+
+        dz = 0.05
+
+        pathList = []
+        targetLArmTf = almath.Transform(transform_note_1)
+        pathList.append(list(targetLArmTf.toVector()))
+        #targetLArmTf = almath.Transform(self.motionProxy.getTransform("LArm", frame, useSensorValues))
+        #Point 1
+        targetLArmTf.r3_c4 -= dz
+        pathList.append(list(targetLArmTf.toVector()))
         
-        # #Point 2
-        # targetLArmTf = almath.Transform(transform)
-        # targetLArmTf.r3_c4 -= dz
-        # pathList.append(list(targetLArmTf.toVector()))
+        #Point2
+        targetLArmTf.r3_c4 -= dz
+        pathList.append(list(targetLArmTf.toVector()))
 
+        targetLArmTf.r3_c4 -= dz
+        pathList.append(list(targetLArmTf.toVector()))
 
-        # self.motionProxy.transformInterpolations(effectorList, frame, pathList,
-        #                                 axisMaskList, timeList)
+        targetLArmTf.r3_c4 -= dz
+        pathList.append(list(targetLArmTf.toVector()))
 
-        # pathList = []
-        # targetLArmTf = almath.Transform(transfor_2)
-        # pathList.append(list(targetLArmTf.toVector()))
-        # #targetLArmTf = almath.Transform(self.motionProxy.getTransform("LArm", frame, useSensorValues))
-        # #Point 1
-        # targetLArmTf = almath.Transform(transform_hit_2)
-        # targetLArmTf.r3_c4 -= dz
-        # pathList.append(list(targetLArmTf.toVector()))
+        targetLArmTf.r3_c4 -= dz
+        pathList.append(list(targetLArmTf.toVector()))
         
-        # #Point 2
-        # targetLArmTf = almath.Transform(transfor_2)
-        # targetLArmTf.r3_c4 -= dz
-        # pathList.append(list(targetLArmTf.toVector()))
-
-
-        # self.motionProxy.transformInterpolations(effectorList, frame, pathList,
-        #                                 axisMaskList, timeList)
-
-                            
-
-        # transform_note = almath.Transform([0.894376277923584, -0.4424368739128113, -0.06588573008775711, 0.1553073525428772, 
-        #                     0.4450879693031311, 0.8948973417282104, 0.032487720251083374, 0.20851591229438782,
-        #                     0.04458719491958618, -0.05838119238615036, 0.9972982406616211, 0.26008081436157227,
-        #                       0.00, 0.00, 0.00, 1.00]) 
-        
-        
-        # current_transform = almath.Transform(self.motionProxy.getTransform(chainName,frame,useSensorValues)).reshape([4,4])
-        print(almath.Transform(self.motionProxy.getTransform(chainName,frame,useSensorValues)))   
-
-
-
-
+        self.motionProxy.transformInterpolations(effectorList, frame, pathList,axisMaskList, timeList)
 
 
 
@@ -270,31 +326,6 @@ class notePositions:
         #  
         #  ShoulderPitch ShoulderRoll ElbowYaw ElbowRoll WrisYaw Hand
         #target = [1.043, 0.264, -2.086, -1.023, 1.39, 0.45]
-     
-
-
-
-
-##############
-# SEND MOVEMENT TO NAO 
-##############
-
-    # def send_movement(req):
-    #     print(req, type(req.joint_name), type(req.angle), type(req.speed))
-
-    #     if(req.relative):
-    #         print("Setting relative position to follow marker")
-    #         cur_angle = motionProxy.getAngles(req.joint_name, False)
-    #         req.angle = cur_angle[0]*almath.TO_DEG + req.angle
-        
-    #     req = check_limits(req)
-    #     motionProxy.setAngles(req.joint_name, req.angle*almath.TO_RAD, req.speed)
-    #     print(motionProxy.getTaskList())
-    # #    time.sleep(3.0)
-
-        #disable = rospy.ServiceProxy('body_stiffness/disable', Empty)
-        #disable()
-        # return True
 
 
 
