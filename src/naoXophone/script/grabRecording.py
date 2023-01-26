@@ -30,11 +30,9 @@ class grabSticks:
         # self.joint_sub = rospy.Subscriber('joint_states', JointState, self.joint_state_callback)
         self.head_sub = rospy.Subscriber("/tactile_touch", HeadTouch, self.headtouch_callback)
 
-        self.rightarm = ["RShoulderPitch","RShoulderRoll","RElbowYaw","RElbowRoll","RWristYaw"]
-        self.leftarm = ["LShoulderPitch","LShoulderRoll","LElbowYaw","LElbowRoll","LWristYaw"]
-        # self.botharms = [*self.rightarm, *self.leftarm]
         self.botharms = ["RShoulderPitch","RShoulderRoll","RElbowYaw","RElbowRoll","RWristYaw",
                             "LShoulderPitch","LShoulderRoll","LElbowYaw","LElbowRoll","LWristYaw"]
+
         self.joint_sequence_start = self.motionProxy.getAngles(self.botharms, True) # names , useSensors
         print("Initial Position Recorded")
         print("Place the hand on the joystick and press head button")
@@ -84,7 +82,7 @@ class grabSticks:
             # self.motionProxy.setAngles("RArm", 1.0, 1.0)
             print("head button 3 is press")
             self.send_movement(self.postureFlyingEagles, True)
-            time.sleep(1)
+            # time.sleep(1)
             print("sent flying movement")
             self.send_movement(self.postureHandOnStick, True)#
             print("sent other movement")
@@ -101,7 +99,6 @@ class grabSticks:
         self.headtouch = headtouch   
 
     def get_pose_from_mat(self, mat):
-
         # scale, shear, angles, trans, persp = decompose_matrix(S)
         _,_,angles, trans,_ = tf.transformations.decompose(mat)
         # Check the output of this pose to see if it's correct 
@@ -143,18 +140,20 @@ class grabSticks:
             Specify weather or not the robot should stay stiff afterwards.
         '''
 
+        # http://doc.aldebaran.com/1-14/naoqi/motion/control-joint-api.html#ALMotionProxy::angleInterpolationWithSpeed__AL::ALValueCR.AL::ALValueCR.floatCR
+        # Send with angle interpolation with speed 
+        timeList = [2.0 for i in range(len(self.botharms))]
+        isAbsolute = True
+        self.motionProxy.angleInterpolationWithSpeed(self.botharms, position,timeList, isAbsolute)
+        
         # Send with motionProxy
-        # self.motionProxy.setStiffnesses(self.botharms, [1.0 for i in self.botharms])
+        self.motionProxy.setStiffnesses(self.botharms, [1.0 for i in self.botharms])
         # fractionMaxSpeed = 0.1
         # self.motionProxy.setAngles(self.botharms, position, fractionMaxSpeed)
 
-        # if not stay_stiff: 
-        #     self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
+        if not stay_stiff: 
+            self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
 
-
-        # Send with publisher 
-
-        
 
         return True
 
