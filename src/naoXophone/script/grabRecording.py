@@ -47,18 +47,18 @@ class grabSticks:
         # SET INIT POSITION WITH EVERYTHING STIFF BUT NOT ARMS
         self.postureProxy = ALProxy('ALRobotPosture', naoIP, 9559)
         self.postureProxy.goToPosture("Crouch", 1.0)
-        self.motionProxy.openHand("LHand")
-        self.motionProxy.openHand("RHand") 
+        self.rate.sleep()
+        # self.motionProxy.openHand("LHand")
+        # self.motionProxy.openHand("RHand") 
         self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
 
 
         # PREDEFINE POSTURES 
         self.postureFlyingEagles = [1.5355758666992188, -1.2717280387878418, 0.8988821506500244, 0.24701595306396484, 0.8528621196746826, 1.6980960369110107, 1.1611961126327515, -1.2333779335021973, -0.2269899845123291, -0.6029040813446045]
         self.postureHandOnStick = [0.7470998764038086, -0.428027868270874, 0.6488399505615234, 1.1597461700439453, 1.0829620361328125, 0.891211986541748, 0.12421202659606934, -0.8912959098815918, -1.1489241123199463, -0.6335840225219727]
-
-
+        self.postureHandInTheAir = [-1.4357820749282837, -0.3528618812561035, 0.46169209480285645, 0.6688659191131592, -0.14883995056152344, -1.6214799880981445, 0.42180800437927246, -0.07827591896057129, -0.7930359840393066, 0.11961007118225098];
+        self.postureHandReadyForStick = [1.0508317947387695, -0.1304318904876709, 1.8024080991744995, 1.092249870300293, 0.0827939510345459, 1.084496021270752, 0.17176604270935059, -1.960494041442871, -1.1029040813446045, 0.11961007118225098]
         # SUBSCRIBERS 
-        # self.
 
 
     def run(self): 
@@ -81,10 +81,14 @@ class grabSticks:
             # self.send_cartesian_movement()
             # self.motionProxy.setAngles("RArm", 1.0, 1.0)
             print("head button 3 is press")
-            self.send_movement(self.postureFlyingEagles, True)
+            self.send_movement(self.postureFlyingEagles,1.0, True)
             # time.sleep(1)
             print("sent flying movement")
-            self.send_movement(self.postureHandOnStick, True)#
+            self.send_movement(self.postureHandInTheAir,3.0, True)
+            self.send_movement(self.postureHandReadyForStick,3.0, True)
+            self.motionProxy.openHand("LHand")
+            self.motionProxy.openHand("RHand")
+            self.send_movement(self.postureHandOnStick,3.0, True)#
             print("sent other movement")
             self.motionProxy.closeHand("LHand")
             self.motionProxy.closeHand("RHand")
@@ -134,7 +138,7 @@ class grabSticks:
                                     axisMastList, timeList)
 
 
-    def send_movement(self,position,stay_stiff=True):
+    def send_movement(self,position,speed, stay_stiff=True):
         '''send each joint to the robot. Use a non-blocking call to the API
             Input the final position that we want the robot to be in 
             Specify weather or not the robot should stay stiff afterwards.
@@ -142,12 +146,13 @@ class grabSticks:
 
         # http://doc.aldebaran.com/1-14/naoqi/motion/control-joint-api.html#ALMotionProxy::angleInterpolationWithSpeed__AL::ALValueCR.AL::ALValueCR.floatCR
         # Send with angle interpolation with speed 
-        timeList = [2.0 for i in range(len(self.botharms))]
+        self.motionProxy.setStiffnesses(self.botharms, [1.0 for i in self.botharms])
+        
+        timeList = [speed for i in range(len(self.botharms))]
         isAbsolute = True
-        self.motionProxy.angleInterpolationWithSpeed(self.botharms, position,timeList, isAbsolute)
+        self.motionProxy.angleInterpolation(self.botharms, position,timeList, isAbsolute)
         
         # Send with motionProxy
-        self.motionProxy.setStiffnesses(self.botharms, [1.0 for i in self.botharms])
         # fractionMaxSpeed = 0.1
         # self.motionProxy.setAngles(self.botharms, position, fractionMaxSpeed)
 
