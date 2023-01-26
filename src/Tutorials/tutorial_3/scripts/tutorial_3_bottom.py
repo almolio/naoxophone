@@ -21,8 +21,6 @@ class tutorial_3_bottom:
             cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
         except CvBridgeError as e:
             print(e)
-
-
         cv2.imshow("Bottom Camera", cv_image)
 
         gray = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
