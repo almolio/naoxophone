@@ -34,19 +34,20 @@ PORT = 9559
 class notePositions:
     def __init__(self):
         self.motionProxy = ALProxy('ALMotion',naoIP, PORT) 
-        self.rate = rospy.Rate(1)
+        self.rate = rospy.Rate(2)
         self.postureProxy = ALProxy('ALRobotPosture', naoIP, PORT)
-        self.notesTargets=np.zeros((8,6))
-        self.notesPositions = np.zeros((8,6))
+        L_Arm_joint_limits=self.motionProxy.getLimits("LArm")
+        R_Arm_join_limits = self.motionProxy.getLimits("RArm")
+        self.fractionMaxSpeed = 0.3
         #self.postureProxy.goToPosture("Crouch", 0.5)
         #self.motionProxy.setStiffnesses("LArm",0.0) #Disable stiffness in the arm
-        #self.motionProxy.openHand('LHand')
         # self.motionProxy.setStiffnesses("LArm", 1.0) #Enable stiffness in the arm
-        self.motionProxy.setStiffnesses("LArm", 0.0)
-        # time.sleep(2)
+        #self.motionProxy.openHand('LHand')
+        #time.sleep(2)
         # self.motionProxy.closeHand("LHand")
         # self.motionProxy.setStiffnesses("LArm", 1.0) #Enable stiffness in the arm
         # time.sleep(2)   
+        
         # # Subscribe to the camera 
         # self.bridge = CvBridge()
         # self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
@@ -65,6 +66,71 @@ class notePositions:
             print(e)
         cv2.imshow("Bottom Camera", cv_image)
         cv2.waitKey(3)
+
+
+    def recordArmAngles(self,chainName):
+        if chainName == "LArm":
+            names = ["LShoulderPitch","LShoulderRoll","LElbowYaw","LElbowRoll","LWristYaw"]
+        elif chainName == "RArm":
+            names = ["RShoulderPitch","RShoulderRoll","RElbowYaw","RElbowRoll","RWristYaw"]
+        useSensorValues = True
+        arm_angles = self.motionProxy.getAngles(names,useSensorValues)
+        return arm_angles
+
+    def hitNote(self,chainName):
+        """
+        Position the arm above the note and turn wrist to hit the note
+        chainName: LArm or RArm
+        """
+        frame = motion.FRAME_ROBOT
+        useSensorValues = True
+
+        dz = 0.04 # translation axis Z (meters)
+
+        # Motion of Arm with block process
+        pathList     = []
+
+        axisMaskList = [motion.AXIS_MASK_VEL]
+        timeList     = [[1.0]]         # seconds
+
+        currentPos = self.motionProxy.getPosition("LArm", frame, useSensorValues)
+        targetPos = almath.Position6D(currentPos)
+        targetPos.z -= dz
+        pathList.append(list(targetPos.toVector()))
+        print("Move Down")
+        self.motionProxy.positionInterpolations([chainName], frame, pathList,
+                                    axisMaskList, timeList)
+        print("Turn Wrist")
+        self.turnWrist(chainName,"Down")
+        time.sleep(1)
+        self.turnWrist(chainName,"Up")
+
+        currentPos = self.motionProxy.getPosition("LArm", frame, useSensorValues)
+        targetPos = almath.Position6D(currentPos)
+        targetPos.z += dz
+        pathList.append(list(targetPos.toVector()))
+        print("Lift arm")
+        self.motionProxy.positionInterpolations([chainName], frame, pathList,
+                                    axisMaskList, timeList)
+
+
+    def turnWrist(self,chainName,direction):
+        if chainName == "LArm":
+            names = ["LWristYaw"]
+        elif chainName == "RArm":
+            names = ["RWristYaw"]
+        if direction == "Down":
+            angle=-30
+        elif direction == "Up":
+            angle==30
+        angleLists = [angle*almath.TO_RAD, 0.0]
+        timeLists  = [1.0, 2.0]
+        isAbsolute = False  #angle relative to current position
+        self.motionProxy.angleInterpolation(names, angleLists, timeLists, isAbsolute)
+        time.sleep(1.0)
+
+    
+
         
 
     def recordTransform(self,chainName): 
@@ -120,7 +186,7 @@ class notePositions:
         # transform_hit_note1   =[0.896099, -0.226726, 0.381578, 0.163841,
         #                         0.315852, 0.929728, -0.189322, 0.221143,
         #                         -0.31184, 0.290173, 0.904741, 0.242694]
-        fractionMaxSpeed = 0.5
+        fractionMaxSpeed = 0.3
         axisMask         = 63
 
         self.motionProxy.setTransforms(chainName, frame, transform_note_1, fractionMaxSpeed, axisMask)
@@ -239,6 +305,7 @@ class notePositions:
         current = self.recordTransform("LArm")
         print("Transform")
         print(current)
+        self.hitNote("LArm")
 
         # #self.playInterpolated1
         # self.playNote1(2)

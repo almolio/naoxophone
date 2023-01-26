@@ -24,6 +24,13 @@ LElbowRoll 	    Left elbow joint (Z)            	    -88.5 to -2 	    -1.5446 to
 LWristYaw 	    Left wrist joint (X) 	                -104.5 to 104.5 	-1.8238 to 1.8238
 LHand 	        Left hand 	                            Open and Close 	       Open and Close
 
+
+
+setTransform 
+blocking and non-blocking calls of functions
+
+
+SONG: The sound of music Do, Re, Mi, Do Mi Do Mi Re Mi Fa Fa Mi Re Fa Mi Fa Sol Mi Sol Mi Sol 
 """
 
 naoIP = str(os.getenv("NAO_IP"))
