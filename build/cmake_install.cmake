@@ -126,6 +126,8 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/hrsb/MSNE_HRS/catkin_ws/build/gtest/cmake_install.cmake")
+  include("/home/hrsb/MSNE_HRS/catkin_ws/build/Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1/cmake_install.cmake")
+  include("/home/hrsb/MSNE_HRS/catkin_ws/build/naoXophone/cmake_install.cmake")
 
 endif()
 

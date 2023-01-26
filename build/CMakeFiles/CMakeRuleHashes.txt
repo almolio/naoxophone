@@ -1,4 +1,6 @@
 # Hashes of file build rules.
+3255cdc1cfa11310e6f0e7ffa8e5aa71 /home/hrsb/MSNE_HRS/catkin_ws/devel/include/nao_control_tutorial_1/InterpolateJoints.h
+e41b7d8fc1f66f9ec47657f896a21873 /home/hrsb/MSNE_HRS/catkin_ws/devel/include/nao_control_tutorial_1/MoveJoints.h
 670909b8ff8bad2fc0de3c9967d1a5c5 /home/hrsb/MSNE_HRS/catkin_ws/devel/include/nao_control_tutorial_1/jointAngle.h
 92f6584d6fe068344e9c2db5dca61987 /home/hrsb/MSNE_HRS/catkin_ws/devel/include/nao_control_tutorial_1/timedInterpolation.h
 541141a9478d20230b01596cf04b01bb /home/hrsb/MSNE_HRS/catkin_ws/devel/include/nao_control_tutorial_2/MoveJoints.h
@@ -9,7 +11,9 @@ bd82e2dd87153ef0c91622c7cdacf6cb /home/hrsb/MSNE_HRS/catkin_ws/devel/include/tut
 106bd0b5f8b966c493697e793a973611 /home/hrsb/MSNE_HRS/catkin_ws/devel/include/tutorial7/blinkFeedback.h
 3d16595dd9cc2f4c074cc97434b9a7d8 /home/hrsb/MSNE_HRS/catkin_ws/devel/include/tutorial7/blinkGoal.h
 a380a7cf34fca68762e1a03389d5cb6f /home/hrsb/MSNE_HRS/catkin_ws/devel/include/tutorial7/blinkResult.h
-a5c428494b954f725cf83dbb773590ae /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/nao_control_tutorial_1/srv/__init__.py
+9805b7acb214138bdfefb870304bd889 /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/nao_control_tutorial_1/srv/_InterpolateJoints.py
+ad0f40498c612a032abe4a9a734bedcc /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/nao_control_tutorial_1/srv/_MoveJoints.py
+6a93152db7ec9d9d76503e584353ddb6 /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/nao_control_tutorial_1/srv/__init__.py
 c5d991e6556add7a2de78b4350fbbb91 /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/nao_control_tutorial_1/srv/_jointAngle.py
 cf42d59785c9c90f8cf36703439786eb /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/nao_control_tutorial_1/srv/_timedInterpolation.py
 3f08fbc9e431b55ea3e336c1ea7f1d0e /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/nao_control_tutorial_2/srv/_MoveJoints.py
@@ -22,6 +26,8 @@ f57315e54fd4b6555a2f266440feb2bb /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2
 c113a31e3c7c82ef7edb478260ddca9b /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/tutorial7/msg/_blinkFeedback.py
 2548d7cf105a1b696027db5c5566226f /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/tutorial7/msg/_blinkGoal.py
 892a59be03cce1ec9d7e0f0515696c1f /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/tutorial7/msg/_blinkResult.py
+44c16b0594c16ee46d481b2a2f3cc090 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/common-lisp/ros/nao_control_tutorial_1/srv/InterpolateJoints.lisp
+10b5e04406929f43911e3a38c65dcca4 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/common-lisp/ros/nao_control_tutorial_1/srv/MoveJoints.lisp
 6c70843e0e6d62d033ac22aa922f049e /home/hrsb/MSNE_HRS/catkin_ws/devel/share/common-lisp/ros/nao_control_tutorial_1/srv/jointAngle.lisp
 1fd801abe888c74c29eaf43132bc7d6e /home/hrsb/MSNE_HRS/catkin_ws/devel/share/common-lisp/ros/nao_control_tutorial_1/srv/timedInterpolation.lisp
 3fac8f3ced030920fe802e6fa0c48d02 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/common-lisp/ros/nao_control_tutorial_2/srv/MoveJoints.lisp
@@ -32,6 +38,8 @@ c384c0b8f4830c62dcbe344e299e8208 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/commo
 4f0a8a164a188dd89e646d1620e54113 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/common-lisp/ros/tutorial7/msg/blinkFeedback.lisp
 ed591aa1d16b7cdc5f188d746226f4c4 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/common-lisp/ros/tutorial7/msg/blinkGoal.lisp
 a5b0f041728239a03d9e24a6ab611826 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/common-lisp/ros/tutorial7/msg/blinkResult.lisp
+e8fb99dec34a26604757a4c9e9a2f5ef /home/hrsb/MSNE_HRS/catkin_ws/devel/share/gennodejs/ros/nao_control_tutorial_1/srv/InterpolateJoints.js
+4d1e2e95f393065286ea74d60e9345c4 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/gennodejs/ros/nao_control_tutorial_1/srv/MoveJoints.js
 5d3950fddf02a92dccebc998f560d0a5 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/gennodejs/ros/nao_control_tutorial_1/srv/jointAngle.js
 a8472e2b78bf84bebad690f80d57b053 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/gennodejs/ros/nao_control_tutorial_1/srv/timedInterpolation.js
 355bf9f1f3425ed5157565416deff647 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/gennodejs/ros/nao_control_tutorial_2/srv/MoveJoints.js
@@ -42,7 +50,9 @@ a1cc8780d741af1ec5ddc91567973e7e /home/hrsb/MSNE_HRS/catkin_ws/devel/share/genno
 4e46dc4a4afdad47b832335f1e149ba4 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/gennodejs/ros/tutorial7/msg/blinkFeedback.js
 ef7def9f909bb6f08e015b4010d97a1c /home/hrsb/MSNE_HRS/catkin_ws/devel/share/gennodejs/ros/tutorial7/msg/blinkGoal.js
 e22ced915838851705448623bf816a03 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/gennodejs/ros/tutorial7/msg/blinkResult.js
-6d5aa62d1bcda36e2023f2931d74ffd0 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/nao_control_tutorial_1/manifest.l
+03f9c05e2634ba817e1a4f9ba20455f0 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/nao_control_tutorial_1/manifest.l
+166e9e83e022a412198d81cf5801d6cb /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/nao_control_tutorial_1/srv/InterpolateJoints.l
+2c8cd1d527f52e5988b574722dd58637 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/nao_control_tutorial_1/srv/MoveJoints.l
 f9e4c83090aebc73f56bb7d6d9b4842a /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/nao_control_tutorial_1/srv/jointAngle.l
 229d68feca9340957005cdf1428ede98 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/nao_control_tutorial_1/srv/timedInterpolation.l
 ddb51054748eeea0a14675f400589ec6 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/nao_control_tutorial_2/manifest.l
@@ -56,3 +66,10 @@ da5530490d9b9cf69017444d354bf99d /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseu
 f841587d14fd7b9b59743bf9a57f275b /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/tutorial7/msg/blinkGoal.l
 7ae8ae8d787a136e9e0a77bc7e2cafaf /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/tutorial7/msg/blinkResult.l
 6174aaa57fa4b75c0601bc5932ec5604 CMakeFiles/clean_test_results
+aa1a373a05023a869bc0c26faa42d9f2 Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1/CMakeFiles/_nao_control_tutorial_1_generate_messages_check_deps_InterpolateJoints
+603a42b74a6ad51fbfb05cceda9440b1 Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1/CMakeFiles/_nao_control_tutorial_1_generate_messages_check_deps_MoveJoints
+830bea5841418bd71c13262f675bc9f5 Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1/CMakeFiles/nao_control_tutorial_1_generate_messages_cpp
+830bea5841418bd71c13262f675bc9f5 Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1/CMakeFiles/nao_control_tutorial_1_generate_messages_eus
+830bea5841418bd71c13262f675bc9f5 Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1/CMakeFiles/nao_control_tutorial_1_generate_messages_lisp
+830bea5841418bd71c13262f675bc9f5 Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1/CMakeFiles/nao_control_tutorial_1_generate_messages_nodejs
+830bea5841418bd71c13262f675bc9f5 Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1/CMakeFiles/nao_control_tutorial_1_generate_messages_py

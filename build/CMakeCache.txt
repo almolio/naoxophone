@@ -396,7 +396,7 @@ gtest_main_LIB_DEPENDS:STATIC=general;-lpthread;general;gtest;
 image_transport_DIR:PATH=/opt/ros/kinetic/share/image_transport/cmake
 
 //Path to a library.
-lib:FILEPATH=/opt/ros/kinetic/lib/libxmlrpcpp.so
+lib:FILEPATH=/opt/ros/kinetic/lib/libtf2.so
 
 //The directory containing a CMake configuration file for message_filters.
 message_filters_DIR:PATH=/opt/ros/kinetic/share/message_filters/cmake
@@ -408,10 +408,16 @@ message_generation_DIR:PATH=/opt/ros/kinetic/share/message_generation/cmake
 message_runtime_DIR:PATH=/opt/ros/kinetic/share/message_runtime/cmake
 
 //Value Computed by CMake
-nao_control_tutorial_1_BINARY_DIR:STATIC=/home/hrsb/MSNE_HRS/catkin_ws/build/nao_control_tutorial_1
+naoXophone_BINARY_DIR:STATIC=/home/hrsb/MSNE_HRS/catkin_ws/build/naoXophone
 
 //Value Computed by CMake
-nao_control_tutorial_1_SOURCE_DIR:STATIC=/home/hrsb/MSNE_HRS/catkin_ws/src/nao_control_tutorial_1
+naoXophone_SOURCE_DIR:STATIC=/home/hrsb/MSNE_HRS/catkin_ws/src/naoXophone
+
+//Value Computed by CMake
+nao_control_tutorial_1_BINARY_DIR:STATIC=/home/hrsb/MSNE_HRS/catkin_ws/build/Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1
+
+//Value Computed by CMake
+nao_control_tutorial_1_SOURCE_DIR:STATIC=/home/hrsb/MSNE_HRS/catkin_ws/src/Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1
 
 //Value Computed by CMake
 nao_control_tutorial_2_BINARY_DIR:STATIC=/home/hrsb/MSNE_HRS/catkin_ws/build/nao_control_tutorial_2
@@ -639,7 +645,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=3
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=5
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

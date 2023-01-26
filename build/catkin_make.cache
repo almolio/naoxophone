@@ -1,2 +1,2 @@
-
+Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1:naoXophone
 -DCATKIN_DEVEL_PREFIX=/home/hrsb/MSNE_HRS/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/hrsb/MSNE_HRS/catkin_ws/install -G Unix Makefiles

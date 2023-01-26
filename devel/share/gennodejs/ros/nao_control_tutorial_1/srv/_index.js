@@ -1,10 +1,10 @@
 
 "use strict";
 
-let jointAngle = require('./jointAngle.js')
-let timedInterpolation = require('./timedInterpolation.js')
+let MoveJoints = require('./MoveJoints.js')
+let InterpolateJoints = require('./InterpolateJoints.js')
 
 module.exports = {
-  jointAngle: jointAngle,
-  timedInterpolation: timedInterpolation,
+  MoveJoints: MoveJoints,
+  InterpolateJoints: InterpolateJoints,
 };
