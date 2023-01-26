@@ -61,10 +61,14 @@ class grabSticks:
             print("Moving to stick")
 
         if self.headtouch.button is 3 and self.headtouch.state is 1: 
-           self.send_cartesian_movement()
-
-        # self.rate.sleep()
-
+            self.send_cartesian_movement()
+            self.motionProxy.setAngles("RArm", 1.0, 1.0)
+            
+        # do the action and grab the stick 
+        # lift the stick to starting position, 
+        # check the camera to see where the stick is, 
+        # if the glob center is where we expected, move on 
+        # if it's not then asking for reposition. 
 
     def headtouch_callback(self, headtouch):
         self.headtouch = headtouch   
@@ -98,7 +102,7 @@ class grabSticks:
         pathList.append(self.get_pose_from_mat(self.handle_of_stick()))
 
         # ONe of this will not return correctly because we're getting not adjustment for 
-        # both of the arm at the momemtn
+        # both of the arm at the moment 
         effectorList.append("RArm")
         pathList.append(self.get_pose_from_mat(self.handle_of_stick()))
 
