@@ -5,13 +5,13 @@ import sys
 from sensor_msgs.msg import JointState
 import os 
 import qi
-import argparse
 from naoqi import ALProxy
 from naoqi_bridge_msgs.msg import HeadTouch
 import tf
 import numpy as np
 import math
 import motion
+import time
 
 # roslauch nao_apps tactile.launch
 # docs: http://doc.aldebaran.com/2-4/naoqi/motion/control-joint-api.html 
@@ -33,7 +33,8 @@ class grabSticks:
         self.rightarm = ["RShoulderPitch","RShoulderRoll","RElbowYaw","RElbowRoll","RWristYaw"]
         self.leftarm = ["LShoulderPitch","LShoulderRoll","LElbowYaw","LElbowRoll","LWristYaw"]
         # self.botharms = [*self.rightarm, *self.leftarm]
-        self.botharms = self.leftarm
+        self.botharms = ["RShoulderPitch","RShoulderRoll","RElbowYaw","RElbowRoll","RWristYaw",
+                            "LShoulderPitch","LShoulderRoll","LElbowYaw","LElbowRoll","LWristYaw"]
         self.joint_sequence_start = self.motionProxy.getAngles(self.botharms, True) # names , useSensors
         print("Initial Position Recorded")
         print("Place the hand on the joystick and press head button")
@@ -45,11 +46,29 @@ class grabSticks:
         self.tfbroadcaster = tf.TransformBroadcaster()
 
 
+        # SET INIT POSITION WITH EVERYTHING STIFF BUT NOT ARMS
+        self.postureProxy = ALProxy('ALRobotPosture', naoIP, 9559)
+        self.postureProxy.goToPosture("Crouch", 1.0)
+        self.motionProxy.openHand("LHand")
+        self.motionProxy.openHand("RHand") 
+        self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
+
+
+        # PREDEFINE POSTURES 
+        self.postureFlyingEagles = [1.5355758666992188, -1.2717280387878418, 0.8988821506500244, 0.24701595306396484, 0.8528621196746826, 1.6980960369110107, 1.1611961126327515, -1.2333779335021973, -0.2269899845123291, -0.6029040813446045]
+        self.postureHandOnStick = [0.7470998764038086, -0.428027868270874, 0.6488399505615234, 1.1597461700439453, 1.0829620361328125, 0.891211986541748, 0.12421202659606934, -0.8912959098815918, -1.1489241123199463, -0.6335840225219727]
+
+
+        # SUBSCRIBERS 
+        # self.
+
+
     def run(self): 
         # Position the Nao 
         # Let press the Head Button to start joint recording 
         if self.headtouch.button is 1 and self.headtouch.state is 1:
             self.joint_sequence_end = self.motionProxy.getAngles(self.botharms, True)
+            print(self.joint_sequence_end)
             print("Hand and joystick is recorded.")
         # Write these joint state into a file (So we could update this in the future-- Calibration)    
 
@@ -61,9 +80,17 @@ class grabSticks:
             print("Moving to stick")
 
         if self.headtouch.button is 3 and self.headtouch.state is 1: 
-            self.send_cartesian_movement()
-            self.motionProxy.setAngles("RArm", 1.0, 1.0)
-            
+            # self.send_cartesian_movement()
+            # self.motionProxy.setAngles("RArm", 1.0, 1.0)
+            print("head button 3 is press")
+            self.send_movement(self.postureFlyingEagles, True)
+            time.sleep(1)
+            print("sent flying movement")
+            self.send_movement(self.postureHandOnStick, True)#
+            print("sent other movement")
+            self.motionProxy.closeHand("LHand")
+            self.motionProxy.closeHand("RHand")
+
         # do the action and grab the stick 
         # lift the stick to starting position, 
         # check the camera to see where the stick is, 
@@ -115,27 +142,20 @@ class grabSticks:
             Input the final position that we want the robot to be in 
             Specify weather or not the robot should stay stiff afterwards.
         '''
-        self.motionProxy.setStiffnesses(self.botharms, [1.0 for i in self.botharms])
-        fractionMaxSpeed = 0.2
-        self.motionProxy.setAngles(self.botharms, position, fractionMaxSpeed)
 
-        if not stay_stiff: 
-            self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
+        # Send with motionProxy
+        # self.motionProxy.setStiffnesses(self.botharms, [1.0 for i in self.botharms])
+        # fractionMaxSpeed = 0.1
+        # self.motionProxy.setAngles(self.botharms, position, fractionMaxSpeed)
 
-        # print(req, type(req.joint_name), type(req.angle), type(req.speed))
+        # if not stay_stiff: 
+        #     self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
 
-        # if(req.relative):
-        #     print("Setting relative position to follow marker")
-        #     cur_angle = motionProxy.getAngles(req.joint_name, False)
-        #     req.angle = cur_angle[0]*almath.TO_DEG + req.angle
+
+        # Send with publisher 
+
         
-        # req = check_limits(req)
-        # motionProxy.setAngles(req.joint_name, req.angle*almath.TO_RAD, req.speed)
-        # print(motionProxy.getTaskList())
-        # time.sleep(3.0)
 
-        #disable = rospy.ServiceProxy('body_stiffness/disable', Empty)
-        #disable()
         return True
 
 
