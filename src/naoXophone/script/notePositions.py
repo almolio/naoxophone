@@ -43,14 +43,14 @@ class notePositions:
         #self.motionProxy.setStiffnesses("LArm",0.0) #Disable stiffness in the arm
         # self.motionProxy.setStiffnesses("LArm", 1.0) #Enable stiffness in the arm
         #self.motionProxy.openHand('LHand')
-        #time.sleep(2)
-        # self.motionProxy.closeHand("LHand")
+        # time.sleep(5)
+        self.motionProxy.closeHand("LHand")
         # self.motionProxy.setStiffnesses("LArm", 1.0) #Enable stiffness in the arm
         # time.sleep(2)   
         
-        # # Subscribe to the camera 
-        # self.bridge = CvBridge()
-        # self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
+        # Subscribe to the camera 
+        self.bridge = CvBridge()
+        self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
 
 
     def grabStick(self):
@@ -94,41 +94,64 @@ class notePositions:
         timeList     = [[1.0]]         # seconds
 
         currentPos = self.motionProxy.getPosition("LArm", frame, useSensorValues)
-        targetPos = almath.Position6D(currentPos)
-        targetPos.z -= dz
-        pathList.append(list(targetPos.toVector()))
+
+        print("Position Recorded")
+        # targetPos = almath.Position6D(currentPos)
+        # targetPos.z -= dz
+        # pathList.append(list(targetPos.toVector()))
         print("Move Down")
-        self.motionProxy.positionInterpolations([chainName], frame, pathList,
-                                    axisMaskList, timeList)
+        # self.motionProxy.positionInterpolations([chainName], frame, pathList,
+        #                             axisMaskList, timeList)
+
+        self.turnShoulder(chainName,"Down")
         print("Turn Wrist")
         self.turnWrist(chainName,"Down")
         time.sleep(1)
         self.turnWrist(chainName,"Up")
+        self.turnShoulder(chainName,"Up")
 
-        currentPos = self.motionProxy.getPosition("LArm", frame, useSensorValues)
-        targetPos = almath.Position6D(currentPos)
-        targetPos.z += dz
-        pathList.append(list(targetPos.toVector()))
-        print("Lift arm")
-        self.motionProxy.positionInterpolations([chainName], frame, pathList,
-                                    axisMaskList, timeList)
+        # currentPos = self.motionProxy.getPosition("LArm", frame, useSensorValues)
+        # targetPos = almath.Position6D(currentPos)
+        # targetPos.z += dz
+        # pathList.append(list(targetPos.toVector()))
+        # print("Lift arm")
+        # self.motionProxy.positionInterpolations([chainName], frame, pathList,
+        #                             axisMaskList, timeList)
 
 
     def turnWrist(self,chainName,direction):
+        angle = 0
+        names=[]
         if chainName == "LArm":
             names = ["LWristYaw"]
         elif chainName == "RArm":
             names = ["RWristYaw"]
         if direction == "Down":
-            angle=-30
+            angle=30
         elif direction == "Up":
-            angle==30
-        angleLists = [angle*almath.TO_RAD, 0.0]
-        timeLists  = [1.0, 2.0]
+            angle==-30
+        angleLists = [angle*almath.TO_RAD]
+        timeLists  = [1.0]
         isAbsolute = False  #angle relative to current position
         self.motionProxy.angleInterpolation(names, angleLists, timeLists, isAbsolute)
         time.sleep(1.0)
 
+    def turnShoulder(self,chainName,direction):
+        angle = 0
+        names=[]
+        if chainName == "LArm":
+            names = ["LShoulderPitch"]
+        elif chainName == "RArm":
+            names = ["RShoulderPitch"]
+        if direction == "Down":
+            angle=20
+        elif direction == "Up":
+            angle==-20
+        angleLists = [angle*almath.TO_RAD]
+        timeLists  = [1.0]
+        isAbsolute = False  #angle relative to current position
+        self.motionProxy.angleInterpolation(names, angleLists, timeLists, isAbsolute)
+        time.sleep(1.0)
     
 
         
@@ -310,7 +333,11 @@ class notePositions:
         # #self.playInterpolated1
         # self.playNote1(2)
         # self.playNote2(2)
-        # self.playNote3(2)
+        # self.playNote3(2) # # Subscribe to the camera 
+        # self.bridge = CvBridge()
+        # self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
+
+
         # self.playNote4(2)
 
 
@@ -320,15 +347,15 @@ class notePositions:
         # # // R R R z
         # # // 0 0 0 1
         # # """
-        chainName = "LArm"
-        frame = motion.FRAME_ROBOT
-        transform_note_1 = [1, 0, 0, 0,
-                            0, 0.866, -0.5, 0,
-                            0, 0.5, 0.866, -0.05]
+        # chainName = "LArm"
+        # frame = motion.FRAME_ROBOT
+        # transform_note_1 = [1, 0, 0, 0,
+        #                     0, 0.866, -0.5, 0,
+        #                     0, 0.5, 0.866, -0.05]
 
-        fractionMaxSpeed = 0.5
-        axisMask         = 63
-        self.motionProxy.setTransforms(chainName, frame, transform_note_1, fractionMaxSpeed, axisMask)
+        # fractionMaxSpeed = 0.5
+        # axisMask         = 63
+        # self.motionProxy.setTransforms(chainName, frame, transform_note_1, fractionMaxSpeed, axisMask)
 
 
 
