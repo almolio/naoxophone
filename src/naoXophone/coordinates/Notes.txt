@@ -1,0 +1,8 @@
+I want to establish the coordinate of everything in perspective to the aruco 
+
+When this have been establish, since we have the aruco in relation to the nao. 
+We should have everything in the nao coordinate frame. 
+
+
+task 1: 
+make sure the aruco coordinate correct 

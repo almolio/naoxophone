@@ -12,6 +12,9 @@ import numpy as np
 import math
 import motion
 import time
+import cv2
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge, CvBridgeError
 
 # roslauch nao_apps tactile.launch
 # docs: http://doc.aldebaran.com/2-4/naoqi/motion/control-joint-api.html 
@@ -55,11 +58,22 @@ class grabSticks:
 
         # PREDEFINE POSTURES 
         self.postureFlyingEagles = [1.5355758666992188, -1.2717280387878418, 0.8988821506500244, 0.24701595306396484, 0.8528621196746826, 1.6980960369110107, 1.1611961126327515, -1.2333779335021973, -0.2269899845123291, -0.6029040813446045]
-        self.postureHandOnStick = [0.7470998764038086, -0.428027868270874, 0.6488399505615234, 1.1597461700439453, 1.0829620361328125, 0.891211986541748, 0.12421202659606934, -0.8912959098815918, -1.1489241123199463, -0.6335840225219727]
         self.postureHandInTheAir = [-1.4357820749282837, -0.3528618812561035, 0.46169209480285645, 0.6688659191131592, -0.14883995056152344, -1.6214799880981445, 0.42180800437927246, -0.07827591896057129, -0.7930359840393066, 0.11961007118225098];
+        self.postureHandOnStick = [0.6458559036254883, 0.0060939788818359375, 0.9402999877929688, 0.76857590675354, 0.5092461109161377, 0.6411700248718262, -0.09821796417236328, -0.9127721786499023, -0.5798101425170898, -0.49859189987182617]
         self.postureHandReadyForStick = [1.0508317947387695, -0.1304318904876709, 1.8024080991744995, 1.092249870300293, 0.0827939510345459, 1.084496021270752, 0.17176604270935059, -1.960494041442871, -1.1029040813446045, 0.11961007118225098]
-        # SUBSCRIBERS 
+        self.postureLiftStick = [0.38507604598999023, 0.03217196464538574, 1.010864019393921, 0.76857590675354, 0.6718499660491943, 0.309826135635376, -0.10895586013793945, -0.9833359718322754, -0.5782761573791504, -0.6443219184875488]
 
+        # SUBSCRIBERS FOR IMAGES
+        self.bridge = CvBridge()
+        self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
+
+    def callback_img(self, data):
+        try:
+            cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+        except CvBridgeError as e:
+            print(e)
+        cv2.imshow("Bottom Camera", cv_image)
+        cv2.waitKey(3)
 
     def run(self): 
         # Position the Nao 
@@ -71,11 +85,11 @@ class grabSticks:
         # Write these joint state into a file (So we could update this in the future-- Calibration)    
 
         # Reset the state
-        # Press another button to Repeat the sequence. 
+        # Release everything 
         if self.headtouch.button is 2 and self.headtouch.state is 1: 
-            self.send_movement(self.joint_sequence_start)
-            self.send_movement(self.joint_sequence_end)
-            print("Moving to stick")
+            self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
+            self.motionProxy.openHand("LHand")
+            self.motionProxy.openHand("RHand")
 
         if self.headtouch.button is 3 and self.headtouch.state is 1: 
             # self.send_cartesian_movement()
@@ -88,10 +102,13 @@ class grabSticks:
             self.send_movement(self.postureHandReadyForStick,3.0, True)
             self.motionProxy.openHand("LHand")
             self.motionProxy.openHand("RHand")
+            self.motionProxy.setStiffnesses("LHand", 1.0)
+            self.motionProxy.setStiffnesses("RHand", 1.0)
             self.send_movement(self.postureHandOnStick,3.0, True)#
             print("sent other movement")
             self.motionProxy.closeHand("LHand")
             self.motionProxy.closeHand("RHand")
+            self.send_movement(self.postureLiftStick,2.0, True)
 
         # do the action and grab the stick 
         # lift the stick to starting position, 
@@ -223,6 +240,7 @@ def main():
         # print('looping after run')
         nao_grab_stick.run()
         rate.sleep()
+
 
 
 if __name__ == '__main__':

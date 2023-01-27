@@ -37,10 +37,16 @@ class arucodetection:
         self.pub = rospy.Publisher('aruco_coordinate', String, queue_size=10)
         self.tfbroadcaster = tf.TransformBroadcaster()
         # self.camera_params = []
-        self.camera_matrix = np.asarray([[551.543059,0.000000,327.382898], 
-                            [0.000000, 553.736023,225.026380 ], 
-                            [0.000000,  0.000000, 1.000000]])
-        self.distortion_coefficients = np.asarray([-0.066494,0.095481,-0.000279,0.002292,0.000000])
+        # self.camera_matrix = np.asarray([[551.543059,0.000000,327.382898], 
+        #                                 [0.000000, 553.736023,225.026380 ], 
+        #                                  [0.000000,  0.000000, 1.000000]])
+        # self.distortion_coefficients = np.asarray([-0.066494,0.095481,-0.000279,0.002292,0.000000])
+        self.camera_matrix  = np.asarray([[278.236008818534, 0,    156.194471689706],
+                                [0,                279.380102992049, 126.007123836447],
+                                [0,                0,                1]])
+        self.distortion_coefficients   = np.asarray([ -0.0481869853715082,  0.0201858398559121, 
+        0.0030362056699177, -0.00172241952442813, 0 ])
+
         self.cx = 0
         self.cy = 0
         self.tvec = 0
