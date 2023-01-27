@@ -67,6 +67,11 @@ class grabSticks:
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
 
+
+        # SET stick cartesian coordinate in relation to aruco 
+        self.setStickCartesianCoordinate()
+
+
     def callback_img(self, data):
         try:
             cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
@@ -78,43 +83,186 @@ class grabSticks:
     def run(self): 
         # Position the Nao 
         # Let press the Head Button to start joint recording 
+        self.setStickCartesianCoordinate()
         if self.headtouch.button is 1 and self.headtouch.state is 1:
             self.joint_sequence_end = self.motionProxy.getAngles(self.botharms, True)
             print(self.joint_sequence_end)
             print("Hand and joystick is recorded.")
+
+            # (trans,rot) = self.tflistener.lookupTransform("/ARUCOFRAME","/CameraBottom_optical_frame",rospy.Time(0))
+            # print("Trans Rot of Arcuo from Camera ") 
+            # print(trans,rot)           
+            # (trans,rot) = self.tflistener.lookupTransform("/l_gripper","/ARUCOFRAME",rospy.Time(0))
+            # print("Trans Rot of left stick from Aruco ")            
+            # print(trans,rot)
+            # (trans,rot) = self.tflistener.lookupTransform("/r_gripper","/ARUCOFRAME",rospy.Time(0))
+            # print("Trans Rot of RIGHT stick from Aruco ")            
+            # print(trans,rot)
+
         # Write these joint state into a file (So we could update this in the future-- Calibration)    
 
         # Reset the state
         # Release everything 
         if self.headtouch.button is 2 and self.headtouch.state is 1: 
+            print("Relax")
+            self.motionProxy.killAll()
             self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
-            self.motionProxy.openHand("LHand")
-            self.motionProxy.openHand("RHand")
+            time.sleep(0.05)
+            self.motionProxy.setStiffnesses(["RHand","LHand"], [0.0,0.0])
+            # self.motionProxy.closeHand("LHand")
+            # self.motionProxy.openHand("RHand")
+            print("done relaxing")
 
         if self.headtouch.button is 3 and self.headtouch.state is 1: 
+            print("head button 3 is press")
             # self.send_cartesian_movement()
             # self.motionProxy.setAngles("RArm", 1.0, 1.0)
-            print("head button 3 is press")
-            self.send_movement(self.postureFlyingEagles,1.0, True)
-            # time.sleep(1)
-            print("sent flying movement")
-            self.send_movement(self.postureHandInTheAir,3.0, True)
-            self.send_movement(self.postureHandReadyForStick,3.0, True)
-            self.motionProxy.openHand("LHand")
-            self.motionProxy.openHand("RHand")
-            self.motionProxy.setStiffnesses("LHand", 1.0)
-            self.motionProxy.setStiffnesses("RHand", 1.0)
-            self.send_movement(self.postureHandOnStick,3.0, True)#
-            print("sent other movement")
-            self.motionProxy.closeHand("LHand")
-            self.motionProxy.closeHand("RHand")
-            self.send_movement(self.postureLiftStick,2.0, True)
+
+            ## RUN LIFTING SEQUENCE 
+            self.lifting_sequence()
+
+    def getHomoMat(self,trans, angles):
+        scale = None
+        shear = None
+        perspective = None
+
+        return tf.transformations.compose_matrix(scale, shear, angles, trans, perspective)
+
+
+    # def getTransRot(self,mat):
+    #     scale = None
+    #     shear = None
+    #     perspective = None
+
+
+    #     return tf.transformations.compose_matrix(scale, shear, angles, trans, perspective)
+            
+    def setStickCartesianCoordinate(self):
+        # Trans Rot of Arcuo from Camera --- THIS ONE CHANGE EVERY TIME
+        tarAruco_Camera = [[-0.00845721015460802, 0.1552655403581574, 0.093520057441842], [0.9346952718857345, -0.03283636130211642, 0.0021888805934734187, 0.3539233404180027]]
+        # Trans Rot of left stick from Aruco 
+        tarLStick_Aruco =([-0.0017675604682759471, -0.008507536697413859, -0.08253574729763671], [-0.8046676307743155, 0.18555869257733368, 0.49836954079581575, -0.2640185152598363])
+        # Trans Rot of RIGHT stick from Aruco 
+        tarRStick_Aruco = ([-0.030505818136187163, -0.0646244809682456, -0.015516809471004755], [0.22916915525623704, 0.7602480060467611, -0.19366677793477247, -0.5761923695307235])
+
+        # HAruco_Camera = self.getHomoMat(trans=tarAruco_Camera[0], angles=tarAruco_Camera[1])
+        # HLStick_Aruco = self.getHomoMat(trans=tarLStick_Aruco[0], angles=tarLStick_Aruco[1])
+        # HRStick_Aruco = self.getHomoMat(trans=tarRStick_Aruco[0], angles=tarRStick_Aruco[1])
+
+        # Broadcast the static transformation
+        self.tfbroadcaster.sendTransform(
+                    translation=tarRStick_Aruco[0], 
+                    rotation= tarRStick_Aruco[1], 
+                    time = rospy.get_rostime(),
+                    child = 'RStick',
+                    parent= 'ARUCOFRAME')
+        self.tfbroadcaster.sendTransform(
+                    translation=tarLStick_Aruco[0], 
+                    rotation= tarLStick_Aruco[1], 
+                    time = rospy.get_rostime(),
+                    child = 'LStick',
+                    parent= 'ARUCOFRAME')
+        
+
+        # tf.transformations.euler_from_quaternion(quaternion, axes='sxyz') 
+        
+               
+        # HAruco_tf.transformations.concatenate_matrices()
 
         # do the action and grab the stick 
         # lift the stick to starting position, 
         # check the camera to see where the stick is, 
         # if the glob center is where we expected, move on 
         # if it's not then asking for reposition. 
+    
+    def getStickTargetFromTorso(self):
+        # REturn position 0 is left and rotation 1 is right 
+        (ltrans,lrot) = self.tflistener.lookupTransform("/LStick","/torso",rospy.Time(0))
+        (rtrans,rrot) = self.tflistener.lookupTransform("/RStick","/torso",rospy.Time(0))
+
+
+        self.tfbroadcaster.sendTransform(
+                    translation=ltrans, 
+                    rotation= lrot, 
+                    time = rospy.get_rostime(),
+                    child = 'LTARGETLTARGET',
+                    parent= 'torso')
+
+        ####
+        # This is is the only one that have the correct frame
+        # 
+        #             
+        self.tfbroadcaster.sendTransform(
+                    translation=rtrans, 
+                    rotation= rrot, 
+                    time = rospy.get_rostime(),
+                    child = 'RTARGETTARGET',
+                    parent= 'torso')        
+
+        # TODO: TURN THIS INTO TRANSFORM 
+
+        # chainName        = "Torso"
+        # frame            = motion.FRAME_ROBOT
+        # transform        = [1.0, 0.0, 0.0, 0.00,
+                        # 0.0, 1.0, 0.0, 0.00,
+                        # 0.0, 0.0, 1.0, 0.25]
+        # fractionMaxSpeed = 0.2
+        # axisMask         = 63
+        # self.motionProxy.setTransforms(chainName, frame, transform, fractionMaxSpeed, axisMask)
+
+
+
+        # return [[ltrans[0],ltrans[1],ltrans[2],0,0,0],[rtrans[0],rtrans[1],rtrans[2],0,0,0]]\
+        print("L trans {}".format(ltrans))
+        
+
+
+        return ltrans,lrot
+
+
+    def lifting_sequence(self):
+        self.motionProxy.setStiffnesses(self.botharms, [1.0 for i in self.botharms])
+        ### Motion proxy set transform 
+
+        self.send_movement(self.postureFlyingEagles,1.0, True)
+        print("sent flying movement")
+        self.send_movement(self.postureHandInTheAir,3.0, True)
+        self.send_movement(self.postureHandReadyForStick,3.0, True)
+        self.open_hand()
+        # self.send_movement(self.postureHandOnStick,3.0, True)#
+        # TODO: Fine tune location 
+        # fractionMaxSpeed = 0.2
+        # axisMask = 7 # position is probably enough
+        # endeffectorChain = ["RArm"] 
+        frame = motion.FRAME_TORSO
+        ltrans, lrot = self.getStickTargetFromTorso()
+        print("TARGET ltrans Position {}".format(ltrans))
+        target = ltrans
+        print("TARGET Position {}".format(target))
+        # self.motionProxy.setPositions(endeffectorChain, frame, target[1], fractionMaxSpeed, axisMask)
+        self.tfbroadcaster.sendTransform(
+            translation=target, 
+            rotation= lrot, 
+            time = rospy.get_rostime(),
+            child = 'RTARGET',
+            parent= 'torso')
+        ####3
+        print("sent other movement")
+        self.close_hand()
+        # self.send_movement(self.postureLiftStick,2.0, True)
+    
+    
+    def close_hand(self):
+        self.motionProxy.setStiffnesses("RHand", 1.0)
+        self.motionProxy.setStiffnesses("LHand", 1.0)
+        self.motionProxy.setAngles("LHand", 0.0, 1.0)
+        self.motionProxy.setAngles("RHand", 0.0, 1.0)
+                
+    def open_hand(self):
+        self.motionProxy.setStiffnesses("RHand", 1.0)
+        self.motionProxy.setStiffnesses("LHand", 1.0)
+        self.motionProxy.setAngles("LHand", 1.0, 1.0)
+        self.motionProxy.setAngles("RHand", 1.0, 1.0)
 
     def headtouch_callback(self, headtouch):
         self.headtouch = headtouch   

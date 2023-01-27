@@ -42,10 +42,10 @@ class arucodetection:
         #                                  [0.000000,  0.000000, 1.000000]])
         # self.distortion_coefficients = np.asarray([-0.066494,0.095481,-0.000279,0.002292,0.000000])
         self.camera_matrix  = np.asarray([[278.236008818534, 0,    156.194471689706],
-                                [0,                279.380102992049, 126.007123836447],
-                                [0,                0,                1]])
+                                            [0, 279.380102992049, 126.007123836447],
+                                            [0,                0,                1]])
         self.distortion_coefficients   = np.asarray([ -0.0481869853715082,  0.0201858398559121, 
-        0.0030362056699177, -0.00172241952442813, 0 ])
+                                                        0.0030362056699177, -0.00172241952442813, 0 ])
 
         self.cx = 0
         self.cy = 0
@@ -126,9 +126,9 @@ class arucodetection:
             cY = int((topLeft[1] + bottomRight[1]) / 2.0)
             cv2.circle(image_aruco, (cX, cY), 4, (0, 0, 255), -1)
             # draw the ArUco marker ID on the image
-            cv2.putText(image_aruco, 'id = {}'.format(markerID),
-                (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
-                1, (0, 255, 0), 2)
+            # cv2.putText(image_aruco, 'id = {}'.format(markerID),
+            #     (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+            #     1, (0, 255, 0), 2)
             self.cx = cX
             self.cy = cY
         return image_aruco
