@@ -35,11 +35,12 @@ include_directories(
 )
 
 catkin_install_python(PROGRAMS 
-		./script/detecNotes.py
-    		./script/detecNotes2.py
-    		./script/grabRecording.py
-		./script/notePositions.py
-		./script/playNotes.py
+		script/detectNotes.py
+    script/detectNotes2.py
+    script/grabRecording.py
+		script/notePositions.py
+		script/playNotes.py
+    script/visual_detection.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
