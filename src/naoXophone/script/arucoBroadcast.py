@@ -85,7 +85,7 @@ class arucodetection:
                 roll, pitch, yaw = self.rvec.squeeze()
                 self.tfbroadcaster.sendTransform(
                     translation=self.tvec.squeeze(), 
-                    rotation= tf.transformations.quaternion_from_euler(roll, pitch, yaw), 
+                    rotation= tf.transformations.quaternion_from_euler(roll, pitch, yaw, axes="sxyz"), 
                     time = rospy.get_rostime(),
                     child = 'ARUCOFRAME',
                     # parent = 'TOPCAMERAFRAME')
@@ -137,7 +137,7 @@ class arucodetection:
     def pose_estimation(self, frame, corners,ids, camera_matrix, distortion_coefficients):
         # Estimate pose of each marker and return the values rvec and tvec---(different from those of camera coefficients)
         for i in range(len(ids)):
-            self.rvec, self.tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(corners[i], 0.02, camera_matrix,
+            self.rvec, self.tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(corners[i], 0.03, camera_matrix,
                                                                         distortion_coefficients)
 
 
