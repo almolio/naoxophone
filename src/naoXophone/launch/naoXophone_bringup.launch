@@ -7,8 +7,10 @@
 
   <arg name="nao_ip" default="$(optenv NAO_IP 127.0.0.1)" />
   <arg name="nao_port" default="$(optenv NAO_PORT 9559)" />
+  
+  <!-- <node type="rviz" name="rviz" pkg="rviz" args="-d $(find package_name)/rviz/config_file.rviz" /> -->
 
   <node pkg="nao_apps" type="nao_tactile.py" name="nao_tactile" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)"  />
   <node pkg="naoXophone" type="grabRecording.py" name="grabRecording" required="true" output="screen" />
-  
+  <node pkg="naoXophone" type="arucoBroadcast.py" name="arucoBroadcast" required="true" output="log" />
 </launch>

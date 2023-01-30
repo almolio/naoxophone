@@ -41,6 +41,7 @@ catkin_install_python(PROGRAMS
 		script/notePositions.py
 		script/playNotes.py
     script/visual_detection.py
+    script/arucoBroadcast.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

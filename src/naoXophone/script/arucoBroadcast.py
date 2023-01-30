@@ -37,10 +37,16 @@ class arucodetection:
         self.pub = rospy.Publisher('aruco_coordinate', String, queue_size=10)
         self.tfbroadcaster = tf.TransformBroadcaster()
         # self.camera_params = []
-        self.camera_matrix = np.asarray([[551.543059,0.000000,327.382898], 
-                            [0.000000, 553.736023,225.026380 ], 
-                            [0.000000,  0.000000, 1.000000]])
-        self.distortion_coefficients = np.asarray([-0.066494,0.095481,-0.000279,0.002292,0.000000])
+        # self.camera_matrix = np.asarray([[551.543059,0.000000,327.382898], 
+        #                                 [0.000000, 553.736023,225.026380 ], 
+        #                                  [0.000000,  0.000000, 1.000000]])
+        # self.distortion_coefficients = np.asarray([-0.066494,0.095481,-0.000279,0.002292,0.000000])
+        self.camera_matrix  = np.asarray([[278.236008818534, 0,    156.194471689706],
+                                            [0, 279.380102992049, 126.007123836447],
+                                            [0,                0,                1]])
+        self.distortion_coefficients   = np.asarray([ -0.0481869853715082,  0.0201858398559121, 
+                                                        0.0030362056699177, -0.00172241952442813, 0 ])
+
         self.cx = 0
         self.cy = 0
         self.tvec = 0
@@ -79,7 +85,7 @@ class arucodetection:
                 roll, pitch, yaw = self.rvec.squeeze()
                 self.tfbroadcaster.sendTransform(
                     translation=self.tvec.squeeze(), 
-                    rotation= tf.transformations.quaternion_from_euler(roll, pitch, yaw), 
+                    rotation= tf.transformations.quaternion_from_euler(roll, pitch, yaw, axes="sxyz"), 
                     time = rospy.get_rostime(),
                     child = 'ARUCOFRAME',
                     # parent = 'TOPCAMERAFRAME')
@@ -120,9 +126,9 @@ class arucodetection:
             cY = int((topLeft[1] + bottomRight[1]) / 2.0)
             cv2.circle(image_aruco, (cX, cY), 4, (0, 0, 255), -1)
             # draw the ArUco marker ID on the image
-            cv2.putText(image_aruco, 'id = {}'.format(markerID),
-                (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
-                1, (0, 255, 0), 2)
+            # cv2.putText(image_aruco, 'id = {}'.format(markerID),
+            #     (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+            #     1, (0, 255, 0), 2)
             self.cx = cX
             self.cy = cY
         return image_aruco
@@ -131,7 +137,7 @@ class arucodetection:
     def pose_estimation(self, frame, corners,ids, camera_matrix, distortion_coefficients):
         # Estimate pose of each marker and return the values rvec and tvec---(different from those of camera coefficients)
         for i in range(len(ids)):
-            self.rvec, self.tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(corners[i], 0.02, camera_matrix,
+            self.rvec, self.tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(corners[i], 0.03, camera_matrix,
                                                                         distortion_coefficients)
 
 

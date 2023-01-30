@@ -7,10 +7,4 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/home/hrsb/MSNE_HRS/catkin_ws/devel:$CMAKE_PREFIX_PATH"
-export LD_LIBRARY_PATH="/home/hrsb/MSNE_HRS/catkin_ws/devel/lib:$LD_LIBRARY_PATH"
-export PKG_CONFIG_PATH='/home/hrsb/MSNE_HRS/catkin_ws/devel/lib/pkgconfig:/opt/ros/kinetic/lib/pkgconfig:/opt/ros/kinetic/lib/x86_64-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig'
 export PWD='/home/hrsb/MSNE_HRS/catkin_ws/build'
-export PYTHONPATH="/home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages:$PYTHONPATH"
-export ROSLISP_PACKAGE_DIRECTORIES='/home/hrsb/MSNE_HRS/catkin_ws/devel/share/common-lisp'
-export ROS_PACKAGE_PATH="/home/hrsb/MSNE_HRS/catkin_ws/src:$ROS_PACKAGE_PATH"
