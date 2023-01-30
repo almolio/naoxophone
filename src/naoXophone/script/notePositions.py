@@ -38,22 +38,27 @@ class notePositions:
         self.postureProxy = ALProxy('ALRobotPosture', naoIP, PORT)
         L_Arm_joint_limits=self.motionProxy.getLimits("LArm")
         R_Arm_join_limits = self.motionProxy.getLimits("RArm")
-        self.fractionMaxSpeed = 0.3
-        self.notePosition1 = []
-        self.notePosition2 = []
-        self.notePosition3 = []
-        self.notePosition4 = []
-        self.notePosition5 = []
-        self.notePosition6 = []
-        self.notePosition7 = []
-        self.notePosition8 = []
-
+        self.fractionMaxSpeed = 0.2
+        self.notePosition1 = [0.3589141368865967, 0.5302840347290039, -1.0078802108764648, -0.4662940502166748, 0.7853660583496094]
+        self.notePosition2 = [0.3589141368865967, 0.4432840347290039, -1.0078802108764648, -0.4662940502166748, 0.7853660583496094]
+        self.notePosition3 = [0.2709141368865967, 0.2682840347290039, -1.0078802108764648, -0.4662940502166748, 0.7853660583496094]
+        self.notePosition4 = [0.2709141368865967, 0.1832840347290039, -1.0078802108764648, -0.4662940502166748, 0.7853660583496094]
+        self.notePosition5 = [0.28690004348754883, 0.05058002471923828, 1.483336091041565, 0.357464075088501, -1.3683700561523438]
+        self.notePosition6 = [0.28690004348754883, -0.05058002471923828, 1.483336091041565, 0.357464075088501, -1.3683700561523438]
+        self.notePosition7 = [0.35690004348754883, -0.12458002471923828, 1.483336091041565, 0.357464075088501, -1.3683700561523438]
+        self.notePosition8 = [0.35690004348754883, -0.20958002471923828, 1.483336091041565, 0.357464075088501, -1.3683700561523438]
+        #self.motionProxy.rest()
+        self.motionProxy.setStiffnesses("Body",1.0)
+        # time.sleep(2)
         #self.postureProxy.goToPosture("Crouch", 0.5)
-        #self.motionProxy.setStiffnesses("LArm",0.0) #Disable stiffness in the arm
-        # self.motionProxy.setStiffnesses("LArm", 1.0) #Enable stiffness in the arm
-        #self.motionProxy.openHand('LHand')
-        # time.sleep(5)
-        self.motionProxy.closeHand("LHand")
+        self.motionProxy.setAngles("LHipYawPitch", -0.190174, self.fractionMaxSpeed)
+        # self.motionProxy.setStiffnesses("LArm",0.0) #Disable stiffness in the arm
+        # self.motionProxy.setStiffnesses("RArm",0.0) #Disable stiffness in the arm
+
+        # # self.motionProxy.setStiffnesses("LArm", 1.0) #Enable stiffness in the arm
+        # self.motionProxy.openHand('LHand')
+        # time.sleep(2)
+        # self.motionProxy.closeHand("LHand")
         # self.motionProxy.setStiffnesses("LArm", 1.0) #Enable stiffness in the arm
         # time.sleep(2)   
         
@@ -81,6 +86,7 @@ class notePositions:
         """
         Records the angle of each joint
         """
+        names=chainName
         if chainName == "LArm":
             names = ["LShoulderPitch","LShoulderRoll","LElbowYaw","LElbowRoll","LWristYaw"]
         elif chainName == "RArm":
@@ -95,35 +101,39 @@ class notePositions:
         chainName: LArm or RArm
         notePosition: init position for the note
         """
-        frame = motion.FRAME_ROBOT
-        useSensorValues = True
-        self.motionProxy.angleInterpolationWithSpeed(chainName, notePosition, self.fractionMaxSpeed)
+        if chainName == "LArm":
+            names = ["LShoulderPitch","LShoulderRoll","LElbowYaw","LElbowRoll","LWristYaw"]
+        elif chainName == "RArm":
+            names = ["RShoulderPitch","RShoulderRoll","RElbowYaw","RElbowRoll","RWristYaw"]
+        self.motionProxy.angleInterpolationWithSpeed(names, notePosition, self.fractionMaxSpeed)
 
         axisMaskList = [motion.AXIS_MASK_VEL]
         timeList     = [[1.0]]         # seconds
 
         ## Move arm to position above note
-        self.motionProxy.angleInterpolation([chainName], frame, notePosition,
-                                    axisMaskList, timeList)
+        # self.motionProxy.angleInterpolation([chainName], frame, notePosition,
+        #                             axisMaskList, timeList)
         self.turnDown(chainName)
+        #self.motionProxy.angleInterpolationWithSpeed(names, notePosition, self.fractionMaxSpeed)
+        time.sleep(1.0)
+
 
     def turnDown(self,chainName):
         wrist_angle=0.0
         names=[]
         if chainName == "LArm":
             names = ["LWristYaw", "LShoulderPitch"]
-            wrist_angle=30.0
+            wrist_angle=20.0
             shoulder_angle = 20
         elif chainName == "RArm":
             names = ["RWristYaw", "RShoulderPitch"]
-            wrist_angle=-30.0
+            wrist_angle=-20.0
             shoulder_angle = 20
 
         angleLists  = [[wrist_angle*almath.TO_RAD, 0.0], [shoulder_angle*almath.TO_RAD, 0.0]]
         timeLists   = [[1.0, 2.0], [ 1.0, 2.0]]
         isAbsolute = False  #angle relative to current position
         self.motionProxy.angleInterpolation(names, angleLists, timeLists, isAbsolute)
-        time.sleep(1.0)
     
 
     def recordTransform(self,chainName): 
@@ -190,77 +200,34 @@ class notePositions:
         time.sleep(rhythm)
 
     def run(self):
-        self.motionProxy.setStiffnesses("LArm", 1.0)
+        # self.motionProxy.setStiffnesses("LArm",1.0) #Disable stiffness in the arm
+        # self.motionProxy.setStiffnesses("RArm",1.0) #Disable stiffness in the arm
+
+        #self.motionProxy.setStiffnesses("LArm", 1.0)
         time.sleep(4)
-        current = self.recordTransform("LArm")
-        print("Transform")
+        # current = self.recordTransform("LArm")
+        current = self.recordArmAngles("RArm")
+        print("RArm angles note 1")
         print(current)
-        self.hitNote("LArm")
 
-        # #self.playInterpolated1
-        # self.playNote1(2)
-        # self.playNote2(2)
-        # self.playNote3(2) # # Subscribe to the camera 
-        # self.bridge = CvBridge()
-        # self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
+        self.hitNote("LArm",self.notePosition1)
+        time.sleep(2)
+        self.hitNote("LArm",self.notePosition3)
+        time.sleep(2)
+        self.hitNote("LArm",self.notePosition2)
+        time.sleep(2)
+        self.hitNote("LArm",self.notePosition4)
 
-
-    def playInterpolated1(self,rythm):
-        # Motion of Arms with block process
-        frame = motion.FRAME_ROBOT
-        effectorList = ["LArm"]
-        axisMaskList = [motion.AXIS_MASK_VEL]
-        timeList     = [[0.5, 1.0, 1.5, 2.0, 2.5, 3.0]]         # seconds
-
-
-        transform_note_1 = [0.85052, -0.520852, 0.073002, 0.150683,
-                            0.520812, 0.853411, 0.0210918, 0.232483,
-                            -0.0732864, 0.0200814, 0.997109, 0.272251]
-
-        dz = 0.05
-
-        pathList = []
-        targetLArmTf = almath.Transform(transform_note_1)
-        pathList.append(list(targetLArmTf.toVector()))
-        #targetLArmTf = almath.Transform(self.motionProxy.getTransform("LArm", frame, useSensorValues))
-        #Point 1
-        targetLArmTf.r3_c4 -= dz
-        pathList.append(list(targetLArmTf.toVector()))
-        
-        #Point2
-        targetLArmTf.r3_c4 -= dz
-        pathList.append(list(targetLArmTf.toVector()))
-
-        targetLArmTf.r3_c4 -= dz
-        pathList.append(list(targetLArmTf.toVector()))
-
-        targetLArmTf.r3_c4 -= dz
-        pathList.append(list(targetLArmTf.toVector()))
-
-        targetLArmTf.r3_c4 -= dz
-        pathList.append(list(targetLArmTf.toVector()))
-        
-        self.motionProxy.transformInterpolations(effectorList, frame, pathList,axisMaskList, timeList)
+        self.hitNote("RArm",self.notePosition5)
+        time.sleep(2)
+        self.hitNote("RArm",self.notePosition6)
+        time.sleep(2)
+        self.hitNote("RArm",self.notePosition7)
+        time.sleep(2)
+        self.hitNote("RArm",self.notePosition8)
 
 
-
-
-        # time.sleep(4.0)
-        # print("NOTE 0")
-        # self.playNote(do_pos,do_tar)
-        # time.sleep(1)
-        # # print("NOTE 1")
-        # self.playNote(re_pos,re_tar)
-        # time.sleep(1)
-        # print("NOTE 3")
-        # self.playNote(mi_pos,mi_tar)
-        # time.sleep(1)
-        # print("NOTE 4")
-        # self.playNote(fa_pos,fa_tar)
-        # time.sleep(1)
-        # time.sleep(3)
-        # self.playNote(position_note_1,hit_note_1)
-
+    
 
 def main():
     rospy.init_node('notePositions', anonymous=True)
