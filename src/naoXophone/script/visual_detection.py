@@ -10,8 +10,7 @@ Change path to video.
 """
 path = "/Users/aliyaablitip/Desktop/HRS/"
 
-def extract_shapes(mask, er, dil):
-    kernel = np.ones((5,5),np.uint8)
+def extract_shapes(mask, er, dil, kernel):
     erosion = cv2.erode(mask,kernel,iterations = er)
     dilation = cv2.dilate(erosion,kernel,iterations = dil)
     return dilation
@@ -29,17 +28,16 @@ video = np.stack(frames, axis=0) # dimensions (T, H, W, C)
 
 ############ define base image without background ########
 ##########################################################
-frame           = 400
 
 for frame in range(0, video.shape[0]):
     
     """
-    TO DO:
     In the robot, we have to adjust the ranges for the base image or
     have a neutral background without black and red. This should be 
     doable for the demo. 
     """
-    top_bound       = 80
+
+    top_bound       = 100
     bottom_bound    = 200
     image           = video[frame,:,:,:] 
     base_image      = np.copy(image)
@@ -55,7 +53,6 @@ for frame in range(0, video.shape[0]):
     ############ mask red and black ##########################
     ##########################################################
     image_hsv   = cv2.cvtColor(base_image, cv2.COLOR_BGR2HSV)
-    kernel = np.ones((5,5),np.uint8)
 
     lower_red = np.array([170,50,50])
     upper_red = np.array([180,255,255])
@@ -65,8 +62,11 @@ for frame in range(0, video.shape[0]):
     upper_black =np.array([200,100,100])
     mask_black      = cv2.inRange(image_hsv, lower_black, upper_black)
 
-    dil_red = extract_shapes(mask_red, 1, 3)
-    dil_black = extract_shapes(mask_black, 1, 3)
+    kernel_rec = cv2.getStructuringElement(cv2.MORPH_RECT,(5,5))
+    kernel_cir = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(7,7))
+
+    dil_red     = extract_shapes(mask_red, 1, 4, kernel_rec)
+    dil_black   = extract_shapes(mask_black, 1, 3, kernel_cir)
 
 
     ############ define ranges from red to red ###############
@@ -88,6 +88,23 @@ for frame in range(0, video.shape[0]):
     for i in range(1, 8):
         ranges_top[0, i] = ranges_top[0,i-1]+diff_top
 
+    ############ find tones ##################################
+    ##########################################################
+    tones = ['red', 'orange', 'yellow', 'green', 'blue', 'white', 'lila', 'red', 'none']
+    y_min = 140
+    y_max = 160
+    unique, counts = np.unique(np.where(dil_black[y_min:y_max] != 0)[1], return_counts=True)
+    if len(counts) >=10:
+        ind = np.where(counts == np.max(counts))[0]
+        if len(ind) > 1:
+            ind = ind[0]
+        # print(ind, unique[ind])
+        i = 9
+        for i in range(0, 8):
+            if  ranges_bottom[0, i] < unique[ind] < ranges_bottom[0, i+1]:
+                played = i
+
+
     ############  save figure ################################
     ##########################################################
 
@@ -96,18 +113,25 @@ for frame in range(0, video.shape[0]):
 
     fig = plt.figure()
     plt.imshow(image_rgb)
+
     if True not in np.isnan(dil_red/np.max(np.abs(dil_red))):
-        plt.imshow(dil_red, alpha=(dil_red/np.max(np.abs(dil_red))))
-    
+        plt.imshow(dil_red*0, alpha=(dil_red/np.max(np.abs(dil_red))))
     if True not in np.isnan(dil_black/np.max(np.abs(dil_black))):
-        plt.imshow(dil_black*100, alpha=(dil_black/np.max(np.abs(dil_black))))
+        plt.imshow(dil_black, alpha=(dil_black/np.max(np.abs(dil_black))))
+
     for i in range(0, 9):
-        plt.plot([ranges_bottom[0,i], ranges_top[0,i]], \
-            [ranges_bottom[1,i], ranges_top[1,i]] , linewidth = 2)
+        plt.plot([ranges_bottom[0,i], ranges_top[0,i]], [ranges_bottom[1,i], ranges_top[1,i]] , linewidth = 2)
+    plt.hlines(y_min, 50, 320, colors='white', linewidth = 2)
+    plt.hlines(y_max, 50, 320, colors='white', linewidth = 2)
+    if len(counts) >=10:
+        plt.title('Tone {}'.format(tones[played]))
+
     fig.savefig(os.path.join(path, 'images', 'fig_{}.png'.format(frame)))
     plt.tight_layout()
+    # plt.show()
     plt.close()
 
+ 
 ############  save video ################################
 ##########################################################
 img_array = []
