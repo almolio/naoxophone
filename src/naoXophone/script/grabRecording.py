@@ -249,7 +249,7 @@ class grabSticks:
         self.send_movement(self.postureHandReadyForStick,3.0, True)
         self.open_hand()
         time.sleep(1)
-        self.send_movement(self.postureHandOnStick,3.0, True)#
+        # self.send_movement(self.postureHandOnStick,3.0, True)         #
         # TODO: Fine tune location 
         fractionMaxSpeed = 0.2
         axisMask = 7 # position is probably enough  NOTE bit flipping 
@@ -259,7 +259,7 @@ class grabSticks:
         # print("TARGET ltrans Position {}".format(ltrans))
         target = [self.ltrans[0], self.ltrans[1], self.ltrans[2], 0, 0, 0]
         print("TARGET Position {}".format(target))
-        # self.motionProxy.setPositions(endeffectorChain, frame, target, fractionMaxSpeed, axisMask)
+        self.motionProxy.setPositions(endeffectorChain, frame, target, fractionMaxSpeed, axisMask)         #
         # self.tfbroadcaster.sendTransform(
         #     translation=target, 
         #     rotation= lrot, 

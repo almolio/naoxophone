@@ -54,12 +54,12 @@ class notePositions:
         self.scale[:,0]=[1,2,3,4,5,6,7,8]
         self.scale[:,1]=[1,1,1,1,1,1,1,1]
         self.song_list=["Happy Birthday"]
-        #self.motionProxy.rest()
+        self.motionProxy.rest()
         # self.motionProxy.setStiffnesses("Body",1.0)
         # time.sleep(2)
         #self.postureProxy.goToPosture("Crouch", 0.5)
         #time.sleep(5)
-        #self.motionProxy.setAngles(["LHipPitch", "RHipPitch"], [-0.8, -0.8], self.fractionMaxSpeed)
+        self.motionProxy.setAngles(["LHipPitch", "RHipPitch"], [-0.8, -0.8], self.fractionMaxSpeed)
         # self.motionProxy.setStiffnesses("LArm",0.0) #Disable stiffness in the arm
         # self.motionProxy.setStiffnesses("RArm",0.0) #Disable stiffness in the arm
 
@@ -197,7 +197,7 @@ class notePositions:
         print("LARm angles note 1")
         print(left)
         self.playSong(self.scale)
-        #self.playSong(self.song_1)
+        self.playSong(self.song_1)
 
 
     

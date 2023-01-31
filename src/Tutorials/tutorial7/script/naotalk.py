@@ -42,6 +42,7 @@ class nao_talk:
         # self.motionProxy = ALProxy('ALMotion',naoIP, 9559) 
         self.rate = rospy.Rate(1)
         self.speech_pub = rospy.Publisher("/speech_action/goal", SpeechWithFeedbackActionGoal, queue_size=10)
+        #Words recognized by NAO
         self.vocab_pub = rospy.Publisher('/speech_vocabulary_action/goal',SetSpeechVocabularyActionGoal, queue_size=10)
         self.head_sub = rospy.Subscriber("/tactile_touch", HeadTouch, self.headtouch_callback)
         self.word_sub = rospy.Subscriber("/word_recognized", WordRecognized, self.wordrecognized_callback)
