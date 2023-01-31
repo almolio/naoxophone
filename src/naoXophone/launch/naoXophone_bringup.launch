@@ -12,6 +12,6 @@
 
   <node pkg="nao_apps" type="nao_tactile.py" name="nao_tactile" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)"  />
   <node pkg="nao_apps" type="nao_speech.py" name="nao_speech" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)"  />
-  <node pkg="naoXophone" type="grabRecording.py" name="grabRecording" required="true" output="screen" />
-  <node pkg="naoXophone" type="arucoBroadcast.py" name="arucoBroadcast" required="true" output="log" />
+  <!-- <node pkg="naoXophone" type="grabRecording.py" name="grabRecording" required="true" output="screen" />
+  <node pkg="naoXophone" type="arucoBroadcast.py" name="arucoBroadcast" required="true" output="log" /> -->
 </launch>

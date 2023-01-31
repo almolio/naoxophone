@@ -38,32 +38,32 @@ class notePositions:
         self.postureProxy = ALProxy('ALRobotPosture', naoIP, PORT)
         L_Arm_joint_limits=self.motionProxy.getLimits("LArm")
         R_Arm_join_limits = self.motionProxy.getLimits("RArm")
-        self.fractionMaxSpeed = 0.8
-        self.notePosition1 = [5*almath.TO_RAD, 0.425580539703369, -1.488802108764648, -0.4662940502166748, 1.253660583496094]
-        self.notePosition2 = [5*almath.TO_RAD, 0.3210121536254883, -1.48802108764648, -0.4662940502166748, 1.253660583496094]
-        self.notePosition3 = [5*almath.TO_RAD, 0.2421559715270996, -1.48802108764648, -0.4662940502166748, 1.253660583496094]
-        self.notePosition4 = [5*almath.TO_RAD, 0.1368161201477051, -1.48802108764648, -0.4662940502166748, 1.253660583496094]
-        self.notePosition5 = [5*almath.TO_RAD, -0.2423560428619385, 1.483336091041565, 0.357464075088501, -1.3683700561523438]
-        self.notePosition6 = [5*almath.TO_RAD, -0.36058002471923828, 1.483336091041565, 0.357464075088501, -1.3683700561523438]
-        self.notePosition7 = [5*almath.TO_RAD, -0.458002471923828, 1.483336091041565, 0.357464075088501, -1.3683700561523438]
-        self.notePosition8 = [5*almath.TO_RAD, -0.52958002471923828, 1.483336091041565, 0.357464075088501, -1.3683700561523438]
+        self.fractionMaxSpeed = 0.5
+        self.notePosition1 = [10*almath.TO_RAD, 34*almath.TO_RAD, -1.488802108764648, -0.4662940502166748, 1.253660583496094]
+        self.notePosition2 = [10*almath.TO_RAD, 26.7*almath.TO_RAD, -1.48802108764648, -0.4662940502166748, 1.253660583496094]
+        self.notePosition3 = [10*almath.TO_RAD, 20*almath.TO_RAD, -1.48802108764648, -0.4662940502166748, 1.253660583496094]
+        self.notePosition4 = [10*almath.TO_RAD, 14*almath.TO_RAD, -1.48802108764648, -0.4662940502166748, 1.253660583496094]
+        self.notePosition5 = [10*almath.TO_RAD, -5*almath.TO_RAD, 1.483336091041565, 0.37464075088501, -1.3683700561523438]
+        self.notePosition6 = [10*almath.TO_RAD, -13.5*almath.TO_RAD, 1.483336091041565, 0.37464075088501, -1.3683700561523438]
+        self.notePosition7 = [10*almath.TO_RAD, -20*almath.TO_RAD, 1.483336091041565, 0.37464075088501, -1.3683700561523438]
+        self.notePosition8 = [10*almath.TO_RAD, -26*almath.TO_RAD, 1.483336091041565, 0.37464075088501, -1.3683700561523438]
         self.song_1=np.zeros([25,2])
         self.song_1[:,0] = [1, 1, 2, 1, 4, 3, 1, 1, 2, 1,5,4, 1, 1, 8, 6, 4, 3, 2, 7, 7, 6, 4, 5, 4] #Happy Birthday
-        self.song_1[:,1] = [0.5, 0.5, 1, 1, 1, 2, 0.5, 0.5, 1, 1, 1, 2, 0.5, 0.5, 1, 1, 1, 1, 1, 0.5, 0.5, 1, 1, 1, 2]
+        self.song_1[:,1] = [1, 1, 1.5, 1.5, 1.5, 2, 1, 1, 1.5, 1.5, 1.5, 2, 1, 1, 1.5, 1.5, 1.5, 1.5, 1.5, 1, 1, 1.5, 1.5, 1.5, 2]
         self.scale=np.zeros([8,2])
         self.scale[:,0]=[1,2,3,4,5,6,7,8]
         self.scale[:,1]=[1,1,1,1,1,1,1,1]
         self.song_list=["Happy Birthday"]
-        self.motionProxy.rest()
-        # self.motionProxy.setStiffnesses("Body",1.0)
+        #self.motionProxy.rest()
+        #self.motionProxy.setStiffnesses("Body",1.0)
         # time.sleep(2)
         #self.postureProxy.goToPosture("Crouch", 0.5)
         #time.sleep(5)
-        self.motionProxy.setAngles(["LHipPitch", "RHipPitch"], [-0.8, -0.8], self.fractionMaxSpeed)
+        self.motionProxy.setAngles(["LHipPitch", "RHipPitch"], [-0.85, -0.85], self.fractionMaxSpeed)
         # self.motionProxy.setStiffnesses("LArm",0.0) #Disable stiffness in the arm
         # self.motionProxy.setStiffnesses("RArm",0.0) #Disable stiffness in the arm
 
-        #self.grabStick()
+        self.grabStick()
         # self.motionProxy.setStiffnesses("LArm", 1.0) #Enable stiffness in the arm
         # time.sleep(2)   
         
@@ -106,7 +106,7 @@ class notePositions:
         arm_angles = self.motionProxy.getAngles(names,useSensorValues)
         return arm_angles
 
-    def hitNote(self,note):
+    def hitNote(self,note,speed):
         """
         Position the arm above the note and turn wrist and shoulder to hit the note
         chainName: LArm or RArm
@@ -145,47 +145,50 @@ class notePositions:
 
 
         if note in [1,2,3,4]:
-            joints = ["LElbowYaw", "LShoulderPitch"]
-            elbow_angle=20.0
-            shoulder_angle = 30
+            joints = ["LElbowYaw", "LShoulderPitch","LWristYaw"]
+            elbow_angle=15.0
+            wrist_angle=5.0
+            shoulder_angle = 20
         elif note in [5,6,7,8]:
-            joints = ["RElbowYaw", "RShoulderPitch"]
-            elbow_angle=-20.0
-            shoulder_angle = 30
-        angleLists  = [[elbow_angle*almath.TO_RAD, 0.0], [shoulder_angle*almath.TO_RAD, 0.0]]
-        timeLists   = [[1.0, 2.0], [1.0, 2.0]]
+            joints = ["RElbowYaw", "RShoulderPitch", "RWristYaw"]
+            elbow_angle=-15.0
+            wrist_angle=-7.0
+            shoulder_angle = 20
+        angleLists  = [[elbow_angle*almath.TO_RAD, 0.0], [shoulder_angle*almath.TO_RAD, 0.0], [wrist_angle*almath.TO_RAD, 0.0]]
+        timeLists   = speed*[[0.5, 1.0], [0.5, 1.0], [0.5, 1.0]]
         isAbsolute = False  #angle relative to current position
         self.motionProxy.angleInterpolation(joints, angleLists, timeLists, isAbsolute)
 
 
 
-    def turnDown(self,chainName):
-        names=[]
-        if chainName == "LArm":
-            names = ["LElbowYaw", "LShoulderPitch"]
-            elbow_angle=20.0
-            shoulder_angle = 30
-        elif chainName == "RArm":
-            names = ["RElbowYaw", "RShoulderPitch"]
-            elbow_angle=-20.0
-            shoulder_angle = 30
+    # def turnDown(self,chainName):
+    #     names=[]
+    #     if chainName == "LArm":
+    #         names = ["LElbowYaw", "LShoulderPitch"]
+    #         elbow_angle=20.0
+    #         shoulder_angle = 20
+    #     elif chainName == "RArm":
+    #         names = ["RElbowYaw", "RShoulderPitch"]
+    #         elbow_angle=-20.0
+    #         shoulder_angle = 20
 
-        angleLists  = [[elbow_angle*almath.TO_RAD, 0.0], [shoulder_angle*almath.TO_RAD, 0.0]]
-        timeLists   = [[1.0, 2.0], [ 1.0, 2.0]]
-        isAbsolute = False  #angle relative to current position
-        self.motionProxy.angleInterpolation(names, angleLists, timeLists, isAbsolute)
+    #     angleLists  = [[elbow_angle*almath.TO_RAD, 0.0], [shoulder_angle*almath.TO_RAD, 0.0]]
+    #     timeLists   = [[0.5, 1.0], [ 0.5, 1.0]]
+    #     isAbsolute = False  #angle relative to current position
+    #     self.motionProxy.angleInterpolation(names, angleLists, timeLists, isAbsolute)
     
 
     def playSong(self,song):
         for i in range(len(song[:,0])):
             note = song[i,0]
-            self.hitNote(note)
-            time.sleep(song[i,1])
+            speed = song[i,1]
+            self.hitNote(note,speed)
+            #time.sleep(song[i,1])
 
 
     def run(self):
-        self.motionProxy.setStiffnesses("LArm",1.0) #Disable stiffness in the arm
-        self.motionProxy.setStiffnesses("RArm",1.0) #Disable stiffness in the arm
+        # self.motionProxy.setStiffnesses("LArm",1.0) #Disable stiffness in the arm
+        # self.motionProxy.setStiffnesses("RArm",1.0) #Disable stiffness in the arm
 
         #self.motionProxy.setStiffnesses("LArm", 1.0)
         time.sleep(4)

@@ -32,9 +32,9 @@ PORT = 9559
 class speechInterface:
     def __init__(self):
         #Text to be said by NAO
-        self.speech_pub = rospy.Publisher("/speech_action/goal", SpeechWithFeedbackActionGoal, queue_size=10)
+        self.speech_pub = rospy.Publisher("/speech_action/goal", SpeechWithFeedbackActionGoal, queue_size=50)
         #Words recognized by NAO
-        self.vocab_pub = rospy.Publisher('/speech_vocabulary_action/goal',SetSpeechVocabularyActionGoal, queue_size=10)
+        self.vocab_pub = rospy.Publisher('/speech_vocabulary_action/goal',SetSpeechVocabularyActionGoal, queue_size=50)
 
         #Head buttons state. 
         self.head_sub = rospy.Subscriber("/tactile_touch", HeadTouch, self.headtouch_callback)
@@ -44,6 +44,8 @@ class speechInterface:
         self.head.state = 0,1 
         """
         self.head = HeadTouch(0,0)
+        self.isWaiting = True
+        self.listSongs = False
 
 
     def headtouch_callback(self, headtouch):
@@ -57,53 +59,59 @@ class speechInterface:
         self.speech_pub.publish(sentence)
 
     def idle_state(self):
-        message_1 = "Hello what do you wanna do?"
-        goal_id = "hello"
-        self.talk(message_1,goal_id)
-        message_2 = ("Please press button 1 if you wanna play a song and button 2 if you wanna listen to a song")
-        self.talk(message_2)
+        message = ("Hello, what do you wanna do? Press 1 for playing a song and 2 for listening")
+        goal_id = "ask_action"
+        self.talk(message,goal_id)
+        self.isWaiting = False
 
     def run(self):
+        while(self.isWaiting):
+            time.sleep(2)
+            self.idle_state()
+    
+        if self.head.button is 1 and self.head.state is 1 and not self.isWaiting:
 
-        if self.head.button is 1 and self.head.state is 1:
             message = "Play a song for me"
-            self.talk(message)
+            goal_id = "play"
+            self.talk(message,goal_id)
             """
             START VISUAL RECOGNITION 
 
             PLAY MEMORIZED SONG
 
             """
-            
-        elif self.head.button is 2 and self.head.state is 1:
-            message_1 = "This is a list of the songs I know"
+            self.isWaiting = True
+        elif self.head.button is 2 and self.head.state is 1 and not self.isWaiting:
             song_1 = "Press button 1 for happy birthday song"
+            self.listSongs = True
             #song_2
             #song_3
-            self.talk(message_1)
-            self.talk(song_1)
+            self.talk(song_1,"song1")
             # self.talk(song_2)
             # self.talk(song_3)
-            
-            if self.head.button is 1 and self.head.state is 1:
-                print("Song 1 selected")
-                """
-                FETCH AND PLAY SONG 1
-                """
-            elif self.head.button is 2 and self.head.state is 1:
-                print("Song 2 selected")
-                """
-                FETCH AND PLAY SONG 1
-                """
+            while(self.listSongs):
+                if self.head.button is 1 and self.head.state is 1:
+                    print("Song 1 selected")
+                    """
+                    FETCH AND PLAY SONG 1
+                    """
+                    self.isWaiting = True
+                    self.listSongs = False
+                elif self.head.button is 2 and self.head.state is 1:
+                    print("Song 2 selected")
+                    """
+                    FETCH AND PLAY SONG 1
+                    """
+                    self.isWaiting = True
+                    self.listSongs = False
+                elif self.head.button is 3 and self.head.state is 1:
+                    print("Song 3 seleted")
+                    """
+                    FETCH AND PLAY SONG 1
+                    """
+                    self.isWaiting = True #Go back to idle
+                    
 
-            elif self.head.button is 3 and self.head.state is 1:
-                print("Song 3 seleted")
-                """
-                FETCH AND PLAY SONG 1
-                """
-        else:
-            self.idle_state()
-    
 
 def main():
     rospy.init_node('speechInterface', anonymous=True)
