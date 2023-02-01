@@ -86,25 +86,16 @@ class grabSticks:
             print(self.joint_sequence_end)
             print("Hand and joystick is recorded.")
 
-
-        # Write these joint state into a file (So we could update this in the future-- Calibration)    
-
-
         if self.headtouch.button is 2 and self.headtouch.state is 1: 
             print("Relax")
             self.motionProxy.killAll()
             self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
             time.sleep(0.05)
             self.motionProxy.setStiffnesses(["RHand","LHand"], [0.0,0.0])
-            # self.motionProxy.closeHand("LHand")
-            # self.motionProxy.openHand("RHand")
             print("done relaxing")
 
         if self.headtouch.button is 3 and self.headtouch.state is 1: 
             print("head button 3 is press")
-            # self.send_cartesian_movement()
-            # self.motionProxy.setAngles("RArm", 1.0, 1.0)
-
             ## RUN LIFTING SEQUENCE 
             self.lifting_sequence()
 
@@ -173,17 +164,10 @@ class grabSticks:
         self.send_movement(self.postureHandReadyForStick,3.0, True)
         self.open_hand()
         time.sleep(1)
-        self.send_movement(self.postureHandOnStick,3.0, True)#
-        # TODO: Fine tune location 
-        fractionMaxSpeed = 0.2
-        axisMask = 7 # position is probably enough  NOTE bit flipping 
-        endeffectorChain = ["LArm"] 
-        frame = motion.FRAME_TORSO
-        # ltrans, lrot = self.getStickTargetFromTorso()
-        # print("TARGET ltrans Position {}".format(ltrans))
-        target = [self.ltrans[0], self.ltrans[1], self.ltrans[2], 0, 0, 0]
-        print("TARGET Position {}".format(target))
-        print("sent other movement")
+        self.send_movement(self.postureHandOnStick,3.0, True) 
+        #########
+        self.send_cartesian_armmovement(0.8,stay_stiff=True)
+        #########
         self.close_hand()
         self.send_movement(self.postureLiftStick,2.0, True)
         print("finishing lift sequence")
@@ -213,30 +197,19 @@ class grabSticks:
         _,_,angles, trans,_ = tf.transformations.decompose(mat)
         # Check the output of this pose to see if it's correct 
         return list(trans,angles)
-    def send_cartesian_movement(self):
+    def send_cartesian_armmovement(self, speed, stay_stiff=True):
         # Let's think about the franme that we need to control from 
         # Should be from the torso
+        fractionMaxSpeed = 0.8
+        axisMask = 7 # position is probably enough  NOTE bit flipping 
+        endeffectorChain = ["LArm", "RArm"] 
         frame = motion.FRAME_TORSO
-        effectorList = []
-        pathList = []
-        axisMastList = [motion.AXIS_MASK_VEL, motion.AXIS_MASK_VEL]
-        timeList = [[1.0],[1.0]]
-
-        # Could use another approach and get the current position first then
-        # gradually correct it.
-        effectorList.append("LArm")
-        
-
-        ## TODO: This append need to have take in a vector 
-        pathList.append(self.get_pose_from_mat(self.handle_of_stick()))
-
-        # ONe of this will not return correctly because we're getting not adjustment for 
-        # both of the arm at the moment 
-        effectorList.append("RArm")
-        pathList.append(self.get_pose_from_mat(self.handle_of_stick()))
-
-        self.motionProxy.positionInterpolations(effectorList, frame, pathList, 
-                                    axisMastList, timeList)
+        targetL = [self.ltrans[0], self.ltrans[1], self.ltrans[2], 0, 0, 0]
+        targetR = [self.rtrans[0], self.rtrans[1], self.rtrans[2], 0, 0, 0]
+        target = [targetL, targetR]
+        self.motionProxy.setPositions(endeffectorChain, frame, target, fractionMaxSpeed, axisMask)         #
+        if not stay_stiff: 
+            self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
 
 
     def send_movement(self,position,speed, stay_stiff=True):
@@ -259,9 +232,6 @@ class grabSticks:
 
         if not stay_stiff: 
             self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
-
-
-        return True
 
 
     def get_aruco_frame(self):
