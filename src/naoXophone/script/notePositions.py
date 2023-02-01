@@ -73,15 +73,16 @@ class notePositions:
 
 
     def grabStick(self):
+        speed = 0.5
         self.motionProxy.setStiffnesses("RHand", 1.0)
         self.motionProxy.setStiffnesses("LHand", 1.0)
-        self.motionProxy.setAngles("LHand", 1.0, 1.0)
-        self.motionProxy.setAngles("RHand", 1.0, 1.0)
+        self.motionProxy.setAngles("LHand", 1.0, speed)
+        self.motionProxy.setAngles("RHand", 1.0, speed)
         time.sleep(2)
         self.motionProxy.setStiffnesses("RHand", 1.0)
         self.motionProxy.setStiffnesses("LHand", 1.0)
-        self.motionProxy.setAngles("LHand", 0.0, 1.0)
-        self.motionProxy.setAngles("RHand", 0.0, 1.0)
+        self.motionProxy.setAngles("LHand", 0.0, speed)
+        self.motionProxy.setAngles("RHand", 0.0, speed)
 
         
     def callback_img(self, data):

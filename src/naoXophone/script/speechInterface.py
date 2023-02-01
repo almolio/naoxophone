@@ -1,33 +1,23 @@
 #!/usr/bin/env python
 
 import rospy
-import sys
 import numpy as np
-import argparse
-from sensor_msgs.msg import JointState
 import os 
 from naoqi import ALProxy
-from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 import time
-import motion
-import almath
-import cv2
-import actionlib
 from naoqi_bridge_msgs.msg import Bumper
 from naoqi_bridge_msgs.msg import BlinkActionGoal
 from actionlib_msgs.msg import GoalID
-from std_msgs.msg import ColorRGBA
-from genpy import Duration
 
-from geometry_msgs.msg import Pose2D
 from naoqi_bridge_msgs.msg import HeadTouch, SetSpeechVocabularyActionGoal,SpeechWithFeedbackActionGoal,WordRecognized
-from std_msgs.msg import Bool
-from std_srvs.srv import Empty
-
+from pathlib import Path
+import os
 
 naoIP = str(os.getenv("NAO_IP"))
 PORT = 9559
+cwd = Path.cwd()
+songPath = cwd / "songs"
 
 class speechInterface:
     def __init__(self):
@@ -46,7 +36,7 @@ class speechInterface:
         self.head = HeadTouch(0,0)
         self.isWaiting = True
         self.listSongs = False
-
+        self.currentSong = 0
 
     def headtouch_callback(self, headtouch):
         self.head = headtouch
@@ -59,58 +49,66 @@ class speechInterface:
         self.speech_pub.publish(sentence)
 
     def idle_state(self):
-        message = ("Hello, what do you wanna do? Press 1 for playing a song and 2 for listening")
+        message = ("Hello, I'm nao xo phone, what can I do? \
+                        Press 1 to teach me a new song, \
+                        2 browse my song list, \
+                        3 to play")
         goal_id = "ask_action"
         self.talk(message,goal_id)
         self.isWaiting = False
+
+    def list_all_song(self):
+        '''Search directory and list all song '''
+
+        song_list = []
+        for entry in songPath.iterdir():
+            if entry.is_file():
+                song = os.path.splitext(str(entry))[0]
+                song_list.append(song)
+
+        self.song_list = song_list
 
     def run(self):
         while(self.isWaiting):
             time.sleep(2)
             self.idle_state()
+
+        self.list_all_song()
+
+        self.total_song = len(self.song_list)  # TODO: Read how many files in songs folder 
     
         if self.head.button is 1 and self.head.state is 1 and not self.isWaiting:
 
-            message = "Play a song for me"
-            goal_id = "play"
+            message = "You think you can teach me something new. Let me see what you got"
+            goal_id = "record"
             self.talk(message,goal_id)
             """
             START VISUAL RECOGNITION 
-
+            # TODO: Add the script to run the song recording 
             PLAY MEMORIZED SONG
 
             """
             self.isWaiting = True
-        elif self.head.button is 2 and self.head.state is 1 and not self.isWaiting:
-            song_1 = "Press button 1 for happy birthday song"
-            self.listSongs = True
-            #song_2
-            #song_3
-            self.talk(song_1,"song1")
-            # self.talk(song_2)
-            # self.talk(song_3)
-            while(self.listSongs):
-                if self.head.button is 1 and self.head.state is 1:
-                    print("Song 1 selected")
-                    """
-                    FETCH AND PLAY SONG 1
-                    """
-                    self.isWaiting = True
-                    self.listSongs = False
-                elif self.head.button is 2 and self.head.state is 1:
-                    print("Song 2 selected")
-                    """
-                    FETCH AND PLAY SONG 1
-                    """
-                    self.isWaiting = True
-                    self.listSongs = False
-                elif self.head.button is 3 and self.head.state is 1:
-                    print("Song 3 seleted")
-                    """
-                    FETCH AND PLAY SONG 1
-                    """
-                    self.isWaiting = True #Go back to idle
-                    
+
+            message = "Impressive, I think I got it."
+
+        if self.head.button is 2 and self.head.state is 1 and not self.isWaiting:
+            self.currentSong += 1 
+
+            if self.currentSong > self.total_song: 
+                self.currentSong = 0
+    
+            message = "The current song is song number{}".format(str(self.song_list[self.currentSong]))
+            self.talk(message, "song")
+
+        if self.head.button is 3 and self.head.state is 1 and not self.isWaiting: 
+            '''Excute Song'''
+            # TODO: play the song selected 
+            # Grab the stick 
+            # and play the song? 
+            
+            ## Approach 1 call grab stick service or broadcast 
+
 
 
 def main():
