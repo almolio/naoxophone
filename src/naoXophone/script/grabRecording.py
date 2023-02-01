@@ -9,13 +9,14 @@ from naoqi import ALProxy
 from naoqi_bridge_msgs.msg import HeadTouch
 import tf
 import numpy as np
+import almath
 import math
 import motion
 import time
 import cv2
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
-
+from std_srvs.srv import *
 
 # roslauch nao_apps tactile.launch
 # docs: http://doc.aldebaran.com/2-4/naoqi/motion/control-joint-api.html 
@@ -50,9 +51,15 @@ class grabSticks:
         # PREDEFINE POSTURES 
         self.postureFlyingEagles = [1.5355758666992188, -1.2717280387878418, 0.8988821506500244, 0.24701595306396484, 0.8528621196746826, 1.6980960369110107, 1.1611961126327515, -1.2333779335021973, -0.2269899845123291, -0.6029040813446045]
         self.postureHandInTheAir = [-1.4357820749282837, -0.3528618812561035, 0.46169209480285645, 0.6688659191131592, -0.14883995056152344, -1.6214799880981445, 0.42180800437927246, -0.07827591896057129, -0.7930359840393066, 0.11961007118225098];
-        self.postureHandOnStick = [0.6458559036254883, 0.0060939788818359375, 0.9402999877929688, 0.76857590675354, 0.5092461109161377, 0.6411700248718262, -0.09821796417236328, -0.9127721786499023, -0.5798101425170898, -0.49859189987182617]
-        self.postureHandReadyForStick = [1.0508317947387695, -0.1304318904876709, 1.8024080991744995, 1.092249870300293, 0.0827939510345459, 1.084496021270752, 0.17176604270935059, -1.960494041442871, -1.1029040813446045, 0.11961007118225098]
-        self.postureLiftStick = [0.38507604598999023, 0.03217196464538574, 1.010864019393921, 0.76857590675354, 0.6718499660491943, 0.309826135635376, -0.10895586013793945, -0.9833359718322754, -0.5782761573791504, -0.6443219184875488]
+        self.postureHandReadyForStick = [1.3883118629455566, -0.2055978775024414, 1.348344087600708, 1.5386438369750977, 0.11040592193603516, 1.3759560585021973, 0.2070479393005371, -1.418992042541504, -1.5446163415908813, -0.19025802612304688]
+        
+        # self.postureLiftStick = [0.38507604598999023, 0.03217196464538574, 1.010864019393921, 0.76857590675354, 0.6718499660491943, 0.309826135635376, -0.10895586013793945, -0.9833359718322754, -0.5782761573791504, -0.6443219184875488]
+        # self.postureLiftStick   = [0.8406739234924316, -0.09514999389648438, 1.0031940937042236, 1.1367359161376953, 0.36351609230041504, 0.9188239574432373, -0.013848066329956055, -1.0370259284973145, -1.1366519927978516, -0.3206479549407959]
+
+        
+        # self.postureHandOnStick = [0.6458559036254883, 0.0060939788818359375, 0.9402999877929688, 0.76857590675354, 0.5092461109161377, 0.6411700248718262, -0.09821796417236328, -0.9127721786499023, -0.5798101425170898, -0.49859189987182617]
+        # self.postureHandOnStick = [1.0140161514282227, 0.14722204208374023, 1.3698201179504395, 1.1919598579406738, 0.16716408729553223, 0.7776961326599121, 0.05518198013305664, -0.8958978652954102, -1.0768260955810547, -0.5354080200195312]
+        self.postureHandOnStick = [0.9311800003051758, -0.03072190284729004, 1.1642640829086304, 1.07230806350708, 0.34357404708862305, 0.7102000713348389, -0.07520794868469238, -0.9818019866943359, -0.8559300899505615, -0.48325204849243164]
 
         # SUBSCRIBERS FOR IMAGES
         self.bridge = CvBridge()
@@ -83,7 +90,7 @@ class grabSticks:
         cv2.waitKey(3)
 
 
-    def run(self): 
+    def run(self, req): 
         if self.headtouch.button is 1 and self.headtouch.state is 1:
             self.joint_sequence_end = self.motionProxy.getAngles(self.botharms, True)
             print(self.joint_sequence_end)
@@ -93,8 +100,10 @@ class grabSticks:
             print("Relax")
             self.motionProxy.killAll()
             self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
-            time.sleep(0.05)
+            time.sleep(1)
+            self.open_hand()
             self.motionProxy.setStiffnesses(["RHand","LHand"], [0.0,0.0])
+            time.sleep(1)
             print("done relaxing")
 
         if self.headtouch.button is 3 and self.headtouch.state is 1: 
@@ -102,11 +111,13 @@ class grabSticks:
             ## RUN LIFTING SEQUENCE 
             self.lifting_sequence()
 
-        try:
-            self.getStickTargetFromTorso()
-        except:
-            pass
+        # try:
+        #     self.getStickTargetFromTorso()
+        # except:
+        #     pass
 
+        
+        return []
 
     def showRelativeTxStickfromAruco(self):
         ''' Pull the transformation from the right hand and left hand to aruco 
@@ -163,7 +174,7 @@ class grabSticks:
 
         self.send_movement(self.postureFlyingEagles,1.0, True)
         print("sent flying movement")
-        self.send_movement(self.postureHandInTheAir,3.0, True)
+        # self.send_movement(self.postureHandInTheAir,3.0, True)
         self.send_movement(self.postureHandReadyForStick,3.0, True)
         self.open_hand()
         time.sleep(1)
@@ -172,11 +183,12 @@ class grabSticks:
         # self.send_cartesian_armmovement(0.8,stay_stiff=True)
         #########
         self.close_hand()
-        self.send_movement(self.postureLiftStick,2.0, True)
+        # self.send_movement(self.postureLiftStick,2.0, True)
+        self.liftStick()
+        # self.open_hand()
         print("finishing lift sequence")
     
     def close_hand(self):
-        
         self.motionProxy.setStiffnesses("RHand", 1.0)
         self.motionProxy.setStiffnesses("LHand", 1.0)
         self.motionProxy.setAngles("LHand", 0.0, self.hand_speed)
@@ -192,30 +204,18 @@ class grabSticks:
         self.headtouch = headtouch   
 
 
+    def liftStick(self):
+
+        joints = ["RElbowRoll", "LElbowRoll"]
+        elbow_angle = 10*almath.TO_RAD
+        print(elbow_angle)
+        angleLists  = [elbow_angle,-elbow_angle]
+        timeLists   = [2.0, 2.0]
+        isAbsolute = False  #angle relative to current position
+        self.motionProxy.angleInterpolation(joints, angleLists, timeLists, isAbsolute)
 ##############
 # SEND MOVEMENT TO NAO 
 ##############
-
-    def get_pose_from_mat(self, mat):
-        # scale, shear, angles, trans, persp = decompose_matrix(S)
-        _,_,angles, trans,_ = tf.transformations.decompose(mat)
-        # Check the output of this pose to see if it's correct 
-        return list(trans,angles)
-    def send_cartesian_armmovement(self, speed, stay_stiff=True):
-        # Let's think about the franme that we need to control from 
-        # Should be from the torso
-        fractionMaxSpeed = 0.8
-        axisMask = 7 # position is probably enough  NOTE bit flipping 
-        endeffectorChain = ["LArm", "RArm"] 
-        frame = motion.FRAME_TORSO
-        targetL = [self.ltrans[0], self.ltrans[1], self.ltrans[2], 0, 0, 0]
-        targetR = [self.rtrans[0], self.rtrans[1], self.rtrans[2], 0, 0, 0]
-        target = [targetL, targetR]
-        self.motionProxy.setPositions(endeffectorChain, frame, target, fractionMaxSpeed, axisMask)         #
-        if not stay_stiff: 
-            self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
-
-
     def send_movement(self,position,speed, stay_stiff=True):
         '''send each joint to the robot. Use a BLOCKING call to the API
             Input the final position that we want the robot to be in 
@@ -234,6 +234,27 @@ class grabSticks:
         # fractionMaxSpeed = 0.1
         # self.motionProxy.setAngles(self.botharms, position, fractionMaxSpeed)
 
+        if not stay_stiff: 
+            self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
+
+    def get_pose_from_mat(self, mat):
+        # scale, shear, angles, trans, persp = decompose_matrix(S)
+        _,_,angles, trans,_ = tf.transformations.decompose(mat)
+        # Check the output of this pose to see if it's correct 
+        return list(trans,angles)
+
+
+    def send_cartesian_armmovement(self, speed, stay_stiff=True):
+        # Let's think about the franme that we need to control from 
+        # Should be from the torso
+        fractionMaxSpeed = 0.8
+        axisMask = 7 # position is probably enough  NOTE bit flipping 
+        endeffectorChain = ["LArm", "RArm"] 
+        frame = motion.FRAME_TORSO
+        targetL = [self.ltrans[0], self.ltrans[1], self.ltrans[2], 0, 0, 0]
+        targetR = [self.rtrans[0], self.rtrans[1], self.rtrans[2], 0, 0, 0]
+        target = [targetL, targetR]
+        self.motionProxy.setPositions(endeffectorChain, frame, target, fractionMaxSpeed, axisMask)         #
         if not stay_stiff: 
             self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
 
@@ -279,14 +300,19 @@ class grabSticks:
 def main():
     # TODO: ESTABLISH THE JOINT LIMITS? 
 
-    rospy.init_node('grabSticks', anonymous=True)
+    rospy.init_node('grabSticks_server', anonymous=True)
     nao_grab_stick = grabSticks()
     rate = rospy.Rate(5)
 
-    while not rospy.is_shutdown(): 
-        # print('looping after run')
-        nao_grab_stick.run()
-        rate.sleep()
+
+    # run this for demo
+    s = rospy.Service('grabSticks', Empty,nao_grab_stick.run )
+    rospy.spin()
+
+    # while not rospy.is_shutdown(): 
+    #     nao_grab_stick.run(1)
+
+    #     rate.sleep()
 
 
 

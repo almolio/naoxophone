@@ -13,7 +13,7 @@ import time
 import motion
 import almath
 import cv2
-
+from std_srvs.srv import *
 
 # docs: http://doc.aldebaran.com/2-4/naoqi/motion/control-joint-api.html 
 # http://doc.aldebaran.com/2-8/family/nao_technical/masses_naov6.html
@@ -63,13 +63,13 @@ class notePositions:
         # self.motionProxy.setStiffnesses("LArm",0.0) #Disable stiffness in the arm
         # self.motionProxy.setStiffnesses("RArm",0.0) #Disable stiffness in the arm
 
-        self.grabStick()
-        # self.motionProxy.setStiffnesses("LArm", 1.0) #Enable stiffness in the arm
-        # time.sleep(2)   
+        # self.grabStick()
+        # # self.motionProxy.setStiffnesses("LArm", 1.0) #Enable stiffness in the arm
+        # # time.sleep(2)   
         
-        # Subscribe to the camera 
-        self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
+        # # Subscribe to the camera 
+        # self.bridge = CvBridge()
+        # self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
 
 
     def grabStick(self):
@@ -187,12 +187,12 @@ class notePositions:
             #time.sleep(song[i,1])
 
 
-    def run(self):
+    def run(self,req):
         # self.motionProxy.setStiffnesses("LArm",1.0) #Disable stiffness in the arm
         # self.motionProxy.setStiffnesses("RArm",1.0) #Disable stiffness in the arm
-
+        print("about to play song")
         #self.motionProxy.setStiffnesses("LArm", 1.0)
-        time.sleep(4)
+        time.sleep(1)
         # right = self.recordArmAngles("RArm")
         # print("RArm angles note 1")
         # print(right)
@@ -202,23 +202,26 @@ class notePositions:
         print(left)
         self.playSong(self.scale)
         self.playSong(self.song_1)
-
+        return []
 
     
 
 def main():
-    rospy.init_node('notePositions', anonymous=True)
+    rospy.init_node('notePositions_server', anonymous=True)
     nao_detect_notes = notePositions()
     rate = rospy.Rate(5)
+    
+    s = rospy.Service('playSong', Empty,nao_detect_notes.run)
+    rospy.spin()
     # try:
     #     rospy.spin()
     # except KeyboardInterrupt:
     #     print("Shutting down")
     # cv2.destroyAllWindows()
-    while not rospy.is_shutdown(): 
-        # print('looping after run')
-        nao_detect_notes.run()
-        rate.sleep()
+    # while not rospy.is_shutdown(): 
+    #     # print('looping after run')
+    #     nao_detect_notes.run()
+    #     rate.sleep()
 
 
 if __name__ == '__main__':

@@ -13,22 +13,26 @@ from actionlib_msgs.msg import GoalID
 from naoqi_bridge_msgs.msg import HeadTouch, SetSpeechVocabularyActionGoal,SpeechWithFeedbackActionGoal,WordRecognized
 from pathlib import Path
 import os
+from std_srvs.srv import *
+
 
 naoIP = str(os.getenv("NAO_IP"))
 PORT = 9559
 cwd = Path.cwd()
-songPath = cwd / "src" / "naoXophone" / "script" / "songs"
+songPath = Path('/home/hrsb/MSNE_HRS/catkin_ws/src/naoXophone/script/songs')
 
 class speechInterface:
     def __init__(self):
+        self.motionProxy = ALProxy('ALMotion',naoIP, 9559) 
         #Text to be said by NAO
         self.speech_pub = rospy.Publisher("/speech_action/goal", SpeechWithFeedbackActionGoal, queue_size=50)
         #Words recognized by NAO
         self.vocab_pub = rospy.Publisher('/speech_vocabulary_action/goal',SetSpeechVocabularyActionGoal, queue_size=50)
-
         #Head buttons state. 
         self.head_sub = rospy.Subscriber("/tactile_touch", HeadTouch, self.headtouch_callback)
         # self.word_sub = rospy.Subscriber("/word_recognized", WordRecognized, self.wordrecognized_callback)
+        self.grabsticks = rospy.ServiceProxy("grabSticks", Empty)
+        self.playSong = rospy.ServiceProxy("playSong", Empty)
         """
         self.head.button = 1,2,3
         self.head.state = 0,1 
@@ -53,8 +57,8 @@ class speechInterface:
     def idle_state(self):
         message = ("Hello, I'm nao xo phone, what can I do? \
                         Press 1 to teach me a new song, \
-                        2 browse my song list, \
-                        3 to play")
+                        press 2 to browse my song list, \
+                        press 3 to play selected song")
         goal_id = "ask_action"
         self.talk(message,goal_id)
         self.isWaiting = False
@@ -104,7 +108,7 @@ class speechInterface:
             if self.currentSong > (self.total_song-1): 
                 self.currentSong = 0
     
-            message = "The current song is {}".format(str(self.song_list[self.currentSong]))
+            message = "The current song is {}, press 3 to play".format(str(self.song_list[self.currentSong]))
             
             self.talk(message, "song")
 
@@ -114,11 +118,11 @@ class speechInterface:
             '''Excute Song'''
             # TODO: play the song selected 
             # Grab the stick 
+            self.grabsticks()
             # and play the song? 
-            
-            ## Approach 1 call grab stick service or broadcast 
-            
-
+            print("finished grabing the stick")
+            # self.motionProxy.rest()
+            self.playSong()
 
 
 def main():
