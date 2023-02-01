@@ -40,6 +40,8 @@ class grabSticks:
 
         self.headtouch = HeadTouch(0,0) # Init Headtouch message as empty
 
+        ## SETHANDSPEED
+        self.hand_speed = 0.5
         ## Camera for fine grasping
         self.tflistener = tf.TransformListener()
         self.tfbroadcaster = tf.TransformBroadcaster()
@@ -173,16 +175,17 @@ class grabSticks:
         print("finishing lift sequence")
     
     def close_hand(self):
+        
         self.motionProxy.setStiffnesses("RHand", 1.0)
         self.motionProxy.setStiffnesses("LHand", 1.0)
-        self.motionProxy.setAngles("LHand", 0.0, 1.0)
-        self.motionProxy.setAngles("RHand", 0.0, 1.0)
+        self.motionProxy.setAngles("LHand", 0.0, self.hand_speed)
+        self.motionProxy.setAngles("RHand", 0.0, self.hand_speed)
                 
     def open_hand(self):
         self.motionProxy.setStiffnesses("RHand", 1.0)
         self.motionProxy.setStiffnesses("LHand", 1.0)
-        self.motionProxy.setAngles("LHand", 1.0, 1.0)
-        self.motionProxy.setAngles("RHand", 1.0, 1.0)
+        self.motionProxy.setAngles("LHand", 1.0, self.hand_speed)
+        self.motionProxy.setAngles("RHand", 1.0, self.hand_speed)
 
     def headtouch_callback(self, headtouch):
         self.headtouch = headtouch   
@@ -260,13 +263,6 @@ class grabSticks:
             pass
             return np.identity(4)
 
-
-    def handle_of_stick(self):
-        aruco_torso = self.get_aruco_frame()
-        # TODO: add the right hand adjustment for each hand
-        hand_adjustment = tf.transformations.compose_matrix(translate=[0,0,0])
-        handle_world = aruco_torso - hand_adjustment
-        return handle_world
     
     def broadcast_target_tf(self, parent_frame, child_frame, homogeneous_mat):
         rvec = tf.transformations.euler_from_matrix(homogeneous_mat)
