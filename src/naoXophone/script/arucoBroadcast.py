@@ -53,6 +53,7 @@ class arucodetection:
         self.rvec = 0
         self.arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_50)
 
+        self.troubleshoot = False
 
     def callback (self, image):
         try: # if there is an image
@@ -64,7 +65,8 @@ class arucodetection:
             (corners, ids, rejected) = cv2.aruco.detectMarkers(raw_img, self.arucoDict,
                 parameters=arucoParams)
 
-            cv2.imshow("Image from NAO", raw_img)
+            if self.troubleshoot:
+                cv2.imshow("Image from NAO", raw_img)
             # print('Aruco Corners {},aruco IDS {}'.format(corners,ids))
 
             image_aruco = raw_img.copy()
@@ -93,7 +95,8 @@ class arucodetection:
                     #parent= 'CameraTop_frame')
                 
 
-            cv2.imshow("3D marker position", image_aruco)
+            if self.troubleshoot:
+                cv2.imshow("3D marker position", image_aruco)
             string_to_publish = '{} {}'.format(self.cx, self.cy)
             self.pub.publish(string_to_publish)
             # self rvec is the rotation angle, and tvec is the translation 
