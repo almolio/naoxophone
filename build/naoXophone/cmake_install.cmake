@@ -48,14 +48,6 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/naoXophone" TYPE PROGRAM FILES "/home/hrsb/MSNE_HRS/catkin_ws/build/naoXophone/catkin_generated/installspace/detectNotes.py")
-endif()
-
-if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/naoXophone" TYPE PROGRAM FILES "/home/hrsb/MSNE_HRS/catkin_ws/build/naoXophone/catkin_generated/installspace/detectNotes2.py")
-endif()
-
-if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/naoXophone" TYPE PROGRAM FILES "/home/hrsb/MSNE_HRS/catkin_ws/build/naoXophone/catkin_generated/installspace/grabRecording.py")
 endif()
 
@@ -64,14 +56,18 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/naoXophone" TYPE PROGRAM FILES "/home/hrsb/MSNE_HRS/catkin_ws/build/naoXophone/catkin_generated/installspace/playNotes.py")
-endif()
-
-if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/naoXophone" TYPE PROGRAM FILES "/home/hrsb/MSNE_HRS/catkin_ws/build/naoXophone/catkin_generated/installspace/visual_detection.py")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/naoXophone" TYPE PROGRAM FILES "/home/hrsb/MSNE_HRS/catkin_ws/build/naoXophone/catkin_generated/installspace/arucoBroadcast.py")
+endif()
+
+if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/naoXophone" TYPE PROGRAM FILES "/home/hrsb/MSNE_HRS/catkin_ws/build/naoXophone/catkin_generated/installspace/learnNewSong.py")
+endif()
+
+if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/naoXophone" TYPE PROGRAM FILES "/home/hrsb/MSNE_HRS/catkin_ws/build/naoXophone/catkin_generated/installspace/speechInterface.py")
 endif()
 

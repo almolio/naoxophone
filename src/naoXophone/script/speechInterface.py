@@ -17,7 +17,7 @@ import os
 naoIP = str(os.getenv("NAO_IP"))
 PORT = 9559
 cwd = Path.cwd()
-songPath = cwd / "songs"
+songPath = cwd / "src" / "naoXophone" / "script" / "songs"
 
 class speechInterface:
     def __init__(self):
@@ -37,6 +37,8 @@ class speechInterface:
         self.isWaiting = True
         self.listSongs = False
         self.currentSong = 0
+        self.list_all_song()
+
 
     def headtouch_callback(self, headtouch):
         self.head = headtouch
@@ -63,8 +65,9 @@ class speechInterface:
         song_list = []
         for entry in songPath.iterdir():
             if entry.is_file():
-                song = os.path.splitext(str(entry))[0]
-                song_list.append(song)
+                _, tail = os.path.split(str(entry))
+                song_name = os.path.splitext(tail)[0]
+                song_list.append(song_name)
 
         self.song_list = song_list
 
@@ -76,7 +79,7 @@ class speechInterface:
         self.list_all_song()
 
         self.total_song = len(self.song_list)  # TODO: Read how many files in songs folder 
-    
+
         if self.head.button is 1 and self.head.state is 1 and not self.isWaiting:
 
             message = "You think you can teach me something new. Let me see what you got"
@@ -88,18 +91,24 @@ class speechInterface:
             PLAY MEMORIZED SONG
 
             """
-            self.isWaiting = True
 
             message = "Impressive, I think I got it."
+            
+            
+            self.isWaiting = True
 
         if self.head.button is 2 and self.head.state is 1 and not self.isWaiting:
-            self.currentSong += 1 
+            print("Button 2 is pressed")
+            
 
-            if self.currentSong > self.total_song: 
+            if self.currentSong > (self.total_song-1): 
                 self.currentSong = 0
     
-            message = "The current song is song number{}".format(str(self.song_list[self.currentSong]))
+            message = "The current song is {}".format(str(self.song_list[self.currentSong]))
+            
             self.talk(message, "song")
+
+            self.currentSong += 1 
 
         if self.head.button is 3 and self.head.state is 1 and not self.isWaiting: 
             '''Excute Song'''
@@ -108,6 +117,7 @@ class speechInterface:
             # and play the song? 
             
             ## Approach 1 call grab stick service or broadcast 
+            
 
 
 

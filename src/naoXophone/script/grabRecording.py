@@ -16,6 +16,7 @@ import cv2
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 
+
 # roslauch nao_apps tactile.launch
 # docs: http://doc.aldebaran.com/2-4/naoqi/motion/control-joint-api.html 
 # carteasian control http://doc.aldebaran.com/2-1/naoqi/motion/control-cartesian.html
@@ -168,7 +169,7 @@ class grabSticks:
         time.sleep(1)
         self.send_movement(self.postureHandOnStick,3.0, True) 
         #########
-        self.send_cartesian_armmovement(0.8,stay_stiff=True)
+        # self.send_cartesian_armmovement(0.8,stay_stiff=True)
         #########
         self.close_hand()
         self.send_movement(self.postureLiftStick,2.0, True)
