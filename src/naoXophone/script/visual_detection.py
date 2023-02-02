@@ -70,7 +70,7 @@ def callibration(image, top_bound, bottom_bound):
     plt.hlines(y_min, 50, 320, colors='white', linewidth = 2)
     plt.hlines(y_max, 50, 320, colors='white', linewidth = 2)
     plt.show()
-
+    
     return dil_red, ranges_bottom, ranges_top
 
 

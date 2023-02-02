@@ -52,13 +52,6 @@ class grabSticks:
         self.postureFlyingEagles = [1.5355758666992188, -1.2717280387878418, 0.8988821506500244, 0.24701595306396484, 0.8528621196746826, 1.6980960369110107, 1.1611961126327515, -1.2333779335021973, -0.2269899845123291, -0.6029040813446045]
         self.postureHandInTheAir = [-1.4357820749282837, -0.3528618812561035, 0.46169209480285645, 0.6688659191131592, -0.14883995056152344, -1.6214799880981445, 0.42180800437927246, -0.07827591896057129, -0.7930359840393066, 0.11961007118225098];
         self.postureHandReadyForStick = [1.3883118629455566, -0.2055978775024414, 1.348344087600708, 1.5386438369750977, 0.11040592193603516, 1.3759560585021973, 0.2070479393005371, -1.418992042541504, -1.5446163415908813, -0.19025802612304688]
-        
-        # self.postureLiftStick = [0.38507604598999023, 0.03217196464538574, 1.010864019393921, 0.76857590675354, 0.6718499660491943, 0.309826135635376, -0.10895586013793945, -0.9833359718322754, -0.5782761573791504, -0.6443219184875488]
-        # self.postureLiftStick   = [0.8406739234924316, -0.09514999389648438, 1.0031940937042236, 1.1367359161376953, 0.36351609230041504, 0.9188239574432373, -0.013848066329956055, -1.0370259284973145, -1.1366519927978516, -0.3206479549407959]
-
-        
-        # self.postureHandOnStick = [0.6458559036254883, 0.0060939788818359375, 0.9402999877929688, 0.76857590675354, 0.5092461109161377, 0.6411700248718262, -0.09821796417236328, -0.9127721786499023, -0.5798101425170898, -0.49859189987182617]
-        # self.postureHandOnStick = [1.0140161514282227, 0.14722204208374023, 1.3698201179504395, 1.1919598579406738, 0.16716408729553223, 0.7776961326599121, 0.05518198013305664, -0.8958978652954102, -1.0768260955810547, -0.5354080200195312]
         self.postureHandOnStick = [0.9311800003051758, -0.03072190284729004, 1.1642640829086304, 1.07230806350708, 0.34357404708862305, 0.7102000713348389, -0.07520794868469238, -0.9818019866943359, -0.8559300899505615, -0.48325204849243164]
 
         # SUBSCRIBERS FOR IMAGES
@@ -66,10 +59,6 @@ class grabSticks:
         self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
 
         
-        # SET stick cartesian coordinate in relation to aruco 
-        self.setInitialPose()
-        self.setStickCartesianCoordinate()
-
     def setInitialPose(self):
         # SET INIT POSITION WITH EVERYTHING STIFF BUT NOT ARMS
 
@@ -90,34 +79,6 @@ class grabSticks:
         cv2.waitKey(3)
 
 
-    def run(self, req): 
-        if self.headtouch.button is 1 and self.headtouch.state is 1:
-            self.joint_sequence_end = self.motionProxy.getAngles(self.botharms, True)
-            print(self.joint_sequence_end)
-            print("Hand and joystick is recorded.")
-
-        if self.headtouch.button is 2 and self.headtouch.state is 1: 
-            print("Relax")
-            self.motionProxy.killAll()
-            self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
-            time.sleep(1)
-            self.open_hand()
-            self.motionProxy.setStiffnesses(["RHand","LHand"], [0.0,0.0])
-            time.sleep(1)
-            print("done relaxing")
-
-        if self.headtouch.button is 3 and self.headtouch.state is 1: 
-            print("head button 3 is press")
-            ## RUN LIFTING SEQUENCE 
-            self.lifting_sequence()
-
-        # try:
-        #     self.getStickTargetFromTorso()
-        # except:
-        #     pass
-
-        
-        return []
 
     def showRelativeTxStickfromAruco(self):
         ''' Pull the transformation from the right hand and left hand to aruco 
@@ -297,6 +258,42 @@ class grabSticks:
                 # parent = 'TOPCAMERAFRAME')
                 parent= parent_frame)
 
+    def runloop(self): 
+        # self.setInitialPose()
+        self.setStickCartesianCoordinate()
+        if self.headtouch.button is 1 and self.headtouch.state is 1:
+            self.joint_sequence_end = self.motionProxy.getAngles(self.botharms, True)
+            print(self.joint_sequence_end)
+            print("Hand and joystick is recorded.")
+
+        if self.headtouch.button is 2 and self.headtouch.state is 1: 
+            print("Relax")
+            self.motionProxy.killAll()
+            self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
+            time.sleep(1)
+            self.open_hand()
+            self.motionProxy.setStiffnesses(["RHand","LHand"], [0.0,0.0])
+            time.sleep(1)
+            print("done relaxing")
+
+        if self.headtouch.button is 3 and self.headtouch.state is 1: 
+            print("head button 3 is press")
+            ## RUN LIFTING SEQUENCE 
+            
+
+        # try:
+        #     self.getStickTargetFromTorso()
+        # except:
+        #     pass
+
+
+    def service_handle(self,req):
+        self.setInitialPose()
+        self.setStickCartesianCoordinate()
+        self.lifting_sequence()
+        return []    
+
+
 def main():
     # TODO: ESTABLISH THE JOINT LIMITS? 
 
@@ -304,15 +301,12 @@ def main():
     nao_grab_stick = grabSticks()
     rate = rospy.Rate(5)
 
+    # if nao_grab_stick.TROUBLESHOOT:
+    s = rospy.Service('grabSticks', Empty,nao_grab_stick.service_handle)
 
-    # run this for demo
-    s = rospy.Service('grabSticks', Empty,nao_grab_stick.run )
-    rospy.spin()
-
-    # while not rospy.is_shutdown(): 
-    #     nao_grab_stick.run(1)
-
-    #     rate.sleep()
+    while not rospy.is_shutdown(): 
+        # nao_grab_stick.runloop()
+        rate.sleep()
 
 
 

@@ -14,7 +14,7 @@ import motion
 import almath
 import cv2
 from std_srvs.srv import *
-from naoXophone.srv import songName
+from naoXophone.srv import *
 
 # docs: http://doc.aldebaran.com/2-4/naoqi/motion/control-joint-api.html 
 # http://doc.aldebaran.com/2-8/family/nao_technical/masses_naov6.html
@@ -60,7 +60,6 @@ class notePositions:
         # time.sleep(2)
         #self.postureProxy.goToPosture("Crouch", 0.5)
         #time.sleep(5)
-        self.motionProxy.setAngles(["LHipPitch", "RHipPitch"], [-0.85, -0.85], self.fractionMaxSpeed)
         # self.motionProxy.setStiffnesses("LArm",0.0) #Disable stiffness in the arm
         # self.motionProxy.setStiffnesses("RArm",0.0) #Disable stiffness in the arm
 
@@ -71,6 +70,9 @@ class notePositions:
         # # Subscribe to the camera 
         # self.bridge = CvBridge()
         # self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
+
+    def move_to_playing_position(self):
+        self.motionProxy.setAngles(["LHipPitch", "RHipPitch"], [-0.85, -0.85], self.fractionMaxSpeed)
 
 
     def grabStick(self):
@@ -192,6 +194,7 @@ class notePositions:
         # self.motionProxy.setStiffnesses("LArm",1.0) #Disable stiffness in the arm
         # self.motionProxy.setStiffnesses("RArm",1.0) #Disable stiffness in the arm
         print("about to play song")
+        self.move_to_playing_position()
         #self.motionProxy.setStiffnesses("LArm", 1.0)
         time.sleep(1)
         # right = self.recordArmAngles("RArm")

@@ -21,24 +21,27 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 
-catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES naoXophone
-#  CATKIN_DEPENDS actionlib_msgs cv_bridge image_transport message_generation naoqi_bridge_msgs roscpp rospy sensor_msgs std_msgs tf
-#  DEPENDS system_lib
-)
+# catkin_package(
+# #  INCLUDE_DIRS include
+# #  LIBRARIES naoXophone
+# #  CATKIN_DEPENDS actionlib_msgs cv_bridge image_transport message_generation naoqi_bridge_msgs roscpp rospy sensor_msgs std_msgs tf
+# #  DEPENDS system_lib
+# )
 
 
 include_directories(
 # include
-  ${catkin_INCLUDE_DIRS}
+${catkin_INCLUDE_DIRS}
 )
 
 add_service_files(
-    DIRECTORY srv
-    FILES
-    songName.srv	
-)
+  DIRECTORY srv
+  FILES
+  songName.srv	
+  )
+  
+generate_messages(DEPENDENCIES std_msgs)
+  
 
 catkin_install_python(PROGRAMS 
     script/grabRecording.py

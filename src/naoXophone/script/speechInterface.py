@@ -24,6 +24,7 @@ songPath = Path('/home/hrsb/MSNE_HRS/catkin_ws/src/naoXophone/script/songs')
 class speechInterface:
     def __init__(self):
         self.motionProxy = ALProxy('ALMotion',naoIP, 9559) 
+        self.postureProxy = ALProxy('ALRobotPosture', naoIP, PORT)
         #Text to be said by NAO
         self.speech_pub = rospy.Publisher("/speech_action/goal", SpeechWithFeedbackActionGoal, queue_size=50)
         #Words recognized by NAO
@@ -95,6 +96,8 @@ class speechInterface:
             # TODO: 
 
             """
+            self.postureProxy.goToPosture("Crouch", 0.5)
+            time.sleep(2)
             self.learnSong()
 
 
