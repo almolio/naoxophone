@@ -14,6 +14,7 @@ import motion
 import almath
 import cv2
 from std_srvs.srv import *
+from naoXophone.srv import songName
 
 # docs: http://doc.aldebaran.com/2-4/naoqi/motion/control-joint-api.html 
 # http://doc.aldebaran.com/2-8/family/nao_technical/masses_naov6.html
@@ -197,9 +198,19 @@ class notePositions:
         # print("RArm angles note 1")
         # print(right)
 
+
         left = self.recordArmAngles("LArm")
         print("LARm angles note 1")
         print(left)
+
+        song_name = req
+
+        print("in the run of playSong Service, the name of the song about to be played is")
+        print(song_name)
+
+        # Look at the song directory and pull the song
+
+
         self.playSong(self.scale)
         self.playSong(self.song_1)
         return []
@@ -211,7 +222,8 @@ def main():
     nao_detect_notes = notePositions()
     rate = rospy.Rate(5)
     
-    s = rospy.Service('playSong', Empty,nao_detect_notes.run)
+    # TODO: update empty into song name 
+    s = rospy.Service('playSong', songName ,nao_detect_notes.run)
     rospy.spin()
     # try:
     #     rospy.spin()

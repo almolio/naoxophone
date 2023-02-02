@@ -14,7 +14,7 @@ from naoqi_bridge_msgs.msg import HeadTouch, SetSpeechVocabularyActionGoal,Speec
 from pathlib import Path
 import os
 from std_srvs.srv import *
-
+from naoXophone.srv import songName
 
 naoIP = str(os.getenv("NAO_IP"))
 PORT = 9559
@@ -32,7 +32,8 @@ class speechInterface:
         self.head_sub = rospy.Subscriber("/tactile_touch", HeadTouch, self.headtouch_callback)
         # self.word_sub = rospy.Subscriber("/word_recognized", WordRecognized, self.wordrecognized_callback)
         self.grabsticks = rospy.ServiceProxy("grabSticks", Empty)
-        self.playSong = rospy.ServiceProxy("playSong", Empty)
+        self.playSong = rospy.ServiceProxy("playSong", songName)
+        self.learnSong = rospy.ServiceProxy("learnSong", Empty)
         """
         self.head.button = 1,2,3
         self.head.state = 0,1 
@@ -91,13 +92,14 @@ class speechInterface:
             self.talk(message,goal_id)
             """
             START VISUAL RECOGNITION 
-            # TODO: Add the script to run the song recording 
-            PLAY MEMORIZED SONG
+            # TODO: 
 
             """
+            self.learnSong()
+
 
             message = "Impressive, I think I got it."
-            
+            self.talk(message,"impressive")    
             
             self.isWaiting = True
 
@@ -122,7 +124,8 @@ class speechInterface:
             # and play the song? 
             print("finished grabing the stick")
             # self.motionProxy.rest()
-            self.playSong()
+            # Call play song service passing it the song name, return empty 
+            self.playSong(str(self.song_list[self.currentSong]))
 
 
 def main():

@@ -34,6 +34,12 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+add_service_files(
+    DIRECTORY srv
+    FILES
+    songName.srv	
+)
+
 catkin_install_python(PROGRAMS 
     script/grabRecording.py
 		script/notePositions.py
