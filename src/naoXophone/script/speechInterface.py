@@ -123,7 +123,6 @@ class speechInterface:
             '''Excute Song'''
             # TODO: play the song selected 
             # Grab the stick 
-            self.grabsticks()
             # and play the song? 
             print("finished grabing the stick")
             # self.motionProxy.rest()
@@ -135,6 +134,10 @@ def main():
     rospy.init_node('speechInterface', anonymous=True)
     nao_talk = speechInterface()
     rate = rospy.Rate(5)
+
+    time.sleep(5)
+
+    nao_talk.grabstick()
     # try:
     #     rospy.spin()
     # except KeyboardInterrupt:

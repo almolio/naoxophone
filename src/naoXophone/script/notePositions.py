@@ -61,7 +61,7 @@ class notePositions:
         self.scale=np.zeros([8,2])
         self.scale[:,0]=[1,2,3,4,5,6,7,8]
         self.scale[:,1]=[0,0.5,1,0,0.5,1,0,0.5]
-        self.song_list=["Happy Birthday","Ode to joy","Twinkle twinkle little star"]
+        self.song_list=["Happy Birthday","Ode to joy","Twinkle Twinkle Little Star"]
 
         #self.motionProxy.rest()
         #self.motionProxy.setStiffnesses("Body",1.0)

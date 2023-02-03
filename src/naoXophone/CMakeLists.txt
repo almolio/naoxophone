@@ -38,6 +38,7 @@ add_service_files(
   DIRECTORY srv
   FILES
   songName.srv	
+  stickCheck.srv
   )
   
 generate_messages(DEPENDENCIES std_msgs)
@@ -50,6 +51,7 @@ catkin_install_python(PROGRAMS
     script/arucoBroadcast.py
     script/learnNewSong.py
     script/speechInterface.py
+    script/checkStick.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

@@ -53,7 +53,7 @@ class grabSticks:
         self.postureHandInTheAir = [-1.4357820749282837, -0.3528618812561035, 0.46169209480285645, 0.6688659191131592, -0.14883995056152344, -1.6214799880981445, 0.42180800437927246, -0.07827591896057129, -0.7930359840393066, 0.11961007118225098];
         self.postureHandReadyForStick = [1.3883118629455566, -0.2055978775024414, 1.348344087600708, 1.5386438369750977, 0.11040592193603516, 1.3759560585021973, 0.2070479393005371, -1.418992042541504, -1.5446163415908813, -0.19025802612304688]
         self.postureHandOnStick = [0.9311800003051758, -0.03072190284729004, 1.1642640829086304, 1.07230806350708, 0.34357404708862305, 0.7102000713348389, -0.07520794868469238, -0.9818019866943359, -0.8559300899505615, -0.48325204849243164]
-
+        self.postureReadyToPlay = []
         # SUBSCRIBERS FOR IMAGES
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
@@ -146,6 +146,8 @@ class grabSticks:
         self.close_hand()
         # self.send_movement(self.postureLiftStick,2.0, True)
         self.liftStick()
+        self.send_movement(self.postureReadyToPay, 3.0, True)
+
         # self.open_hand()
         print("finishing lift sequence")
     
@@ -174,6 +176,8 @@ class grabSticks:
         timeLists   = [2.0, 2.0]
         isAbsolute = False  #angle relative to current position
         self.motionProxy.angleInterpolation(joints, angleLists, timeLists, isAbsolute)
+
+
 ##############
 # SEND MOVEMENT TO NAO 
 ##############
@@ -295,7 +299,6 @@ class grabSticks:
 
 
 def main():
-    # TODO: ESTABLISH THE JOINT LIMITS? 
 
     rospy.init_node('grabSticks_server', anonymous=True)
     nao_grab_stick = grabSticks()
