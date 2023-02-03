@@ -1,34 +1,34 @@
 Determining if the pthread_create exist failed with the following output:
 Change Dir: /home/hrsb/MSNE_HRS/catkin_ws/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_329d2/fast"
-/usr/bin/make -f CMakeFiles/cmTC_329d2.dir/build.make CMakeFiles/cmTC_329d2.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_f8adb/fast"
+/usr/bin/make -f CMakeFiles/cmTC_f8adb.dir/build.make CMakeFiles/cmTC_f8adb.dir/build
 make[1]: Entering directory '/home/hrsb/MSNE_HRS/catkin_ws/build/CMakeFiles/CMakeTmp'
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libcrypto.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
-Building C object CMakeFiles/cmTC_329d2.dir/CheckSymbolExists.c.o
-/usr/bin/cc     -o CMakeFiles/cmTC_329d2.dir/CheckSymbolExists.c.o   -c /home/hrsb/MSNE_HRS/catkin_ws/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Building C object CMakeFiles/cmTC_f8adb.dir/CheckSymbolExists.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_f8adb.dir/CheckSymbolExists.c.o   -c /home/hrsb/MSNE_HRS/catkin_ws/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libcrypto.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
-Linking C executable cmTC_329d2
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_329d2.dir/link.txt --verbose=1
+Linking C executable cmTC_f8adb
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f8adb.dir/link.txt --verbose=1
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libcrypto.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
-/usr/bin/cc       CMakeFiles/cmTC_329d2.dir/CheckSymbolExists.c.o  -o cmTC_329d2 -rdynamic 
-CMakeFiles/cmTC_329d2.dir/CheckSymbolExists.c.o: In function `main':
+/usr/bin/cc       CMakeFiles/cmTC_f8adb.dir/CheckSymbolExists.c.o  -o cmTC_f8adb -rdynamic 
+CMakeFiles/cmTC_f8adb.dir/CheckSymbolExists.c.o: In function `main':
 CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
 collect2: error: ld returned 1 exit status
-CMakeFiles/cmTC_329d2.dir/build.make:97: recipe for target 'cmTC_329d2' failed
-make[1]: *** [cmTC_329d2] Error 1
+CMakeFiles/cmTC_f8adb.dir/build.make:97: recipe for target 'cmTC_f8adb' failed
+make[1]: *** [cmTC_f8adb] Error 1
 make[1]: Leaving directory '/home/hrsb/MSNE_HRS/catkin_ws/build/CMakeFiles/CMakeTmp'
-Makefile:126: recipe for target 'cmTC_329d2/fast' failed
-make: *** [cmTC_329d2/fast] Error 2
+Makefile:126: recipe for target 'cmTC_f8adb/fast' failed
+make: *** [cmTC_f8adb/fast] Error 2
 
 File /home/hrsb/MSNE_HRS/catkin_ws/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
 /* */
@@ -48,32 +48,32 @@ int main(int argc, char** argv)
 Determining if the function pthread_create exists in the pthreads failed with the following output:
 Change Dir: /home/hrsb/MSNE_HRS/catkin_ws/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_05347/fast"
-/usr/bin/make -f CMakeFiles/cmTC_05347.dir/build.make CMakeFiles/cmTC_05347.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_d0dd8/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d0dd8.dir/build.make CMakeFiles/cmTC_d0dd8.dir/build
 make[1]: Entering directory '/home/hrsb/MSNE_HRS/catkin_ws/build/CMakeFiles/CMakeTmp'
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libcrypto.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
-Building C object CMakeFiles/cmTC_05347.dir/CheckFunctionExists.c.o
-/usr/bin/cc    -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_05347.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Building C object CMakeFiles/cmTC_d0dd8.dir/CheckFunctionExists.c.o
+/usr/bin/cc    -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_d0dd8.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libcrypto.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
-Linking C executable cmTC_05347
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_05347.dir/link.txt --verbose=1
+Linking C executable cmTC_d0dd8
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d0dd8.dir/link.txt --verbose=1
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libssl.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
 /usr/bin/cmake: /home/hrsb/pynaoqi/libcrypto.so.1.0.0: no version information available (required by /usr/lib/x86_64-linux-gnu/libcurl.so.4)
-/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_05347.dir/CheckFunctionExists.c.o  -o cmTC_05347 -rdynamic -lpthreads 
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_d0dd8.dir/CheckFunctionExists.c.o  -o cmTC_d0dd8 -rdynamic -lpthreads 
 /usr/bin/ld: cannot find -lpthreads
 collect2: error: ld returned 1 exit status
-CMakeFiles/cmTC_05347.dir/build.make:97: recipe for target 'cmTC_05347' failed
-make[1]: *** [cmTC_05347] Error 1
+CMakeFiles/cmTC_d0dd8.dir/build.make:97: recipe for target 'cmTC_d0dd8' failed
+make[1]: *** [cmTC_d0dd8] Error 1
 make[1]: Leaving directory '/home/hrsb/MSNE_HRS/catkin_ws/build/CMakeFiles/CMakeTmp'
-Makefile:126: recipe for target 'cmTC_05347/fast' failed
-make: *** [cmTC_05347/fast] Error 2
+Makefile:126: recipe for target 'cmTC_d0dd8/fast' failed
+make: *** [cmTC_d0dd8/fast] Error 2
 
 

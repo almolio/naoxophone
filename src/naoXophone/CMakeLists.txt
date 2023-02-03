@@ -21,27 +21,37 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 
-catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES naoXophone
-#  CATKIN_DEPENDS actionlib_msgs cv_bridge image_transport message_generation naoqi_bridge_msgs roscpp rospy sensor_msgs std_msgs tf
-#  DEPENDS system_lib
-)
+# catkin_package(
+# #  INCLUDE_DIRS include
+# #  LIBRARIES naoXophone
+# #  CATKIN_DEPENDS actionlib_msgs cv_bridge image_transport message_generation naoqi_bridge_msgs roscpp rospy sensor_msgs std_msgs tf
+# #  DEPENDS system_lib
+# )
 
 
 include_directories(
 # include
-  ${catkin_INCLUDE_DIRS}
+${catkin_INCLUDE_DIRS}
 )
 
+add_service_files(
+  DIRECTORY srv
+  FILES
+  songName.srv	
+  stickCheck.srv
+  )
+  
+generate_messages(DEPENDENCIES std_msgs)
+  
+
 catkin_install_python(PROGRAMS 
-		script/detectNotes.py
-    script/detectNotes2.py
     script/grabRecording.py
 		script/notePositions.py
-		script/playNotes.py
     script/visual_detection.py
     script/arucoBroadcast.py
+    script/learnNewSong.py
+    script/speechInterface.py
+    script/checkStick.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
