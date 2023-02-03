@@ -48,20 +48,20 @@ class notePositions:
         self.notePosition6 = [10*almath.TO_RAD, -20*almath.TO_RAD, 90*almath.TO_RAD, 25*almath.TO_RAD, -75*almath.TO_RAD]
         self.notePosition7 = [10*almath.TO_RAD, -26*almath.TO_RAD, 90*almath.TO_RAD, 30*almath.TO_RAD, -75*almath.TO_RAD]
         self.notePosition8 = [10*almath.TO_RAD, -32*almath.TO_RAD, 90*almath.TO_RAD, 30*almath.TO_RAD, -75*almath.TO_RAD]
-        self.song_1=np.zeros([25,2])
-        self.song_1[:,0] = [1, 1, 2, 1, 4, 3, 1, 1, 2, 1,5,4, 1, 1, 8, 6, 4, 3, 2, 7, 7, 6, 4, 5, 4] #Happy Birthday
-        self.song_1[:,1] = [0, 0, 0.5, 0.5, 0.5, 1, 0, 0, 0.5, 0.5, 0.5, 1, 0.5, 0, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 0.5, 0.5, 0.5, 1]
-        self.song_2=np.zeros([30,2])
-        self.song_2[:,0] = [3, 3, 4, 5, 5, 4, 3, 2, 1, 1, 2, 3, 3, 2, 2, 3, 3, 4, 5, 5, 4, 3, 2, 1, 1, 2, 3, 2, 1, 1]
-        self.song_2[:,1] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 1]
-        self.song_3=np.zeros([42,2])
-        self.song_3[:,0] = [1, 1, 5, 5, 6, 6, 5, 4, 4, 3, 3, 2, 2, 1, 5, 5, 4, 4, 3, 3, 2, 5, 5, 4, 4, 3, 3, 2, 1, 1, 5, 5, 6, 6, 5, 4, 4, 3, 3, 2, 2, 1]
-        self.song_3[:,1] = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1]
+        # self.song_1=np.zeros([25,2])
+        # self.song_1[:,0] = [1, 1, 2, 1, 4, 3, 1, 1, 2, 1,5,4, 1, 1, 8, 6, 4, 3, 2, 7, 7, 6, 4, 5, 4] #Happy Birthday
+        # self.song_1[:,1] = [0, 0, 0.5, 0.5, 0.5, 1, 0, 0, 0.5, 0.5, 0.5, 1, 0.5, 0, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 0.5, 0.5, 0.5, 1]
+        # self.song_2=np.zeros([30,2])
+        # self.song_2[:,0] = [3, 3, 4, 5, 5, 4, 3, 2, 1, 1, 2, 3, 3, 2, 2, 3, 3, 4, 5, 5, 4, 3, 2, 1, 1, 2, 3, 2, 1, 1]
+        # self.song_2[:,1] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 1]
+        # self.song_3=np.zeros([42,2])
+        # self.song_3[:,0] = [1, 1, 5, 5, 6, 6, 5, 4, 4, 3, 3, 2, 2, 1, 5, 5, 4, 4, 3, 3, 2, 5, 5, 4, 4, 3, 3, 2, 1, 1, 5, 5, 6, 6, 5, 4, 4, 3, 3, 2, 2, 1]
+        # self.song_3[:,1] = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1]
 
         self.scale=np.zeros([8,2])
         self.scale[:,0]=[1,2,3,4,5,6,7,8]
         self.scale[:,1]=[0,0.5,1,0,0.5,1,0,0.5]
-        self.song_list=["Happy Birthday","Ode to joy","Twinkle Twinkle Little Star"]
+        # self.song_list=["Happy Birthday","Ode to joy","Twinkle Twinkle Little Star"]
 
         #self.motionProxy.rest()
         #self.motionProxy.setStiffnesses("Body",1.0)
@@ -80,7 +80,16 @@ class notePositions:
         # self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
 
     def move_to_playing_position(self):
-        self.motionProxy.setAngles(["LHipPitch", "RHipPitch"], [-0.8, -0.8], self.fractionMaxSpeed)
+        botharms = ["RShoulderPitch","RShoulderRoll","RElbowYaw","RElbowRoll","RWristYaw",
+                            "LShoulderPitch","LShoulderRoll","LElbowYaw","LElbowRoll","LWristYaw"]
+
+        postureStickOutOfTheWay = [0.8176639080047607, -0.13810205459594727, 1.7870681285858154, 1.5355758666992188, -0.06447005271911621, 0.3451080322265625, 0.5061781406402588, -1.3837099075317383, -1.274712085723877, -0.2884340286254883]
+        timeList = [2.0 for i in range(len(botharms))]
+        isAbsolute = True
+        self.motionProxy.angleInterpolation(botharms, postureStickOutOfTheWay,timeList, isAbsolute)
+        
+
+        self.motionProxy.setAngles(["LHipPitch", "RHipPitch"], [-0.8, -0.8], self.fractionMaxSpeed - 0.2)
 
 
     def grabStick(self):
@@ -213,16 +222,17 @@ class notePositions:
         print("LARm angles note 1")
         print(left)
 
-        song_name = req
-
-        print("in the run of playSong Service, the name of the song about to be played is")
+        song_name = req.songName
         print(song_name)
+        load_path = "/home/hrsb/MSNE_HRS/catkin_ws/src/naoXophone/script/songs/{}.npy".format(song_name)
+        print("Playing {}".format(song_name))
 
         # Look at the song directory and pull the song
+        song_to_play = np.load(load_path)
 
+        self.playSong(song_to_play)
+        # self.playSong(self.scale)
 
-        self.playSong(self.scale)
-        self.playSong(self.song_1)
         return []
 
     
@@ -232,18 +242,8 @@ def main():
     nao_detect_notes = notePositions()
     rate = rospy.Rate(5)
     
-    # TODO: update empty into song name 
     s = rospy.Service('playSong', songName ,nao_detect_notes.run)
     rospy.spin()
-    # try:
-    #     rospy.spin()
-    # except KeyboardInterrupt:
-    #     print("Shutting down")
-    # cv2.destroyAllWindows()
-    # while not rospy.is_shutdown(): 
-    #     # print('looping after run')
-    #     nao_detect_notes.run()
-    #     rate.sleep()
 
 
 if __name__ == '__main__':

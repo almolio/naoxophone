@@ -33,7 +33,10 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/naoXophone/srv" TYPE FILE FILES "/home/hrsb/MSNE_HRS/catkin_ws/src/naoXophone/srv/songName.srv")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/naoXophone/srv" TYPE FILE FILES
+    "/home/hrsb/MSNE_HRS/catkin_ws/src/naoXophone/srv/songName.srv"
+    "/home/hrsb/MSNE_HRS/catkin_ws/src/naoXophone/srv/stickCheck.srv"
+    )
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -86,5 +89,9 @@ endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/naoXophone" TYPE PROGRAM FILES "/home/hrsb/MSNE_HRS/catkin_ws/build/naoXophone/catkin_generated/installspace/speechInterface.py")
+endif()
+
+if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/naoXophone" TYPE PROGRAM FILES "/home/hrsb/MSNE_HRS/catkin_ws/build/naoXophone/catkin_generated/installspace/checkStick.py")
 endif()
 

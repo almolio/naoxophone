@@ -14,7 +14,8 @@ from naoqi_bridge_msgs.msg import HeadTouch, SetSpeechVocabularyActionGoal,Speec
 from pathlib import Path
 import os
 from std_srvs.srv import *
-from naoXophone.srv import songName
+from naoXophone.srv import *
+
 
 naoIP = str(os.getenv("NAO_IP"))
 PORT = 9559
@@ -35,6 +36,7 @@ class speechInterface:
         self.grabsticks = rospy.ServiceProxy("grabSticks", Empty)
         self.playSong = rospy.ServiceProxy("playSong", songName)
         self.learnSong = rospy.ServiceProxy("learnSong", Empty)
+        self.checkSticks = rospy.ServiceProxy("checkSticks",Empty)
         """
         self.head.button = 1,2,3
         self.head.state = 0,1 
@@ -96,37 +98,27 @@ class speechInterface:
             # TODO: 
 
             """
-            self.postureProxy.goToPosture("Crouch", 0.5)
             time.sleep(2)
             self.learnSong()
-
 
             message = "Impressive, I think I got it."
             self.talk(message,"impressive")    
             
+
+
             self.isWaiting = True
 
         if self.head.button is 2 and self.head.state is 1 and not self.isWaiting:
             print("Button 2 is pressed")
+            self.currentSong += 1 
             
-
             if self.currentSong > (self.total_song-1): 
                 self.currentSong = 0
-    
             message = "The current song is {}, press 3 to play".format(str(self.song_list[self.currentSong]))
-            
             self.talk(message, "song")
-
-            self.currentSong += 1 
 
         if self.head.button is 3 and self.head.state is 1 and not self.isWaiting: 
             '''Excute Song'''
-            # TODO: play the song selected 
-            # Grab the stick 
-            # and play the song? 
-            print("finished grabing the stick")
-            # self.motionProxy.rest()
-            # Call play song service passing it the song name, return empty 
             self.playSong(str(self.song_list[self.currentSong]))
 
 
@@ -135,14 +127,11 @@ def main():
     nao_talk = speechInterface()
     rate = rospy.Rate(5)
 
-    time.sleep(5)
+    time.sleep(3)  # wait 5 second then grab the stick 
+    nao_talk.grabsticks()
+    time.sleep(1)
+    nao_talk.checkSticks()
 
-    nao_talk.grabstick()
-    # try:
-    #     rospy.spin()
-    # except KeyboardInterrupt:
-    #     print("Shutting down")
-    # cv2.destroyAllWindows()
     while not rospy.is_shutdown(): 
         # print('looping after run')
         nao_talk.run()

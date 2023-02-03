@@ -17,6 +17,7 @@
   <node pkg="naoXophone" type="arucoBroadcast.py" name="arucoBroadcast" required="true" output="log" />
   <node pkg="naoXophone" type="speechInterface.py" name="speechInterface" required="true" output="log" />
   <node pkg="naoXophone" type="learnNewSong.py" name="learnNewSong" required="true" output="screen" />
+  <node pkg="naoXophone" type="checkStick.py" name="checkStick" required="true" output="log" />
   
   
 </launch>

@@ -53,7 +53,9 @@ class grabSticks:
         self.postureHandInTheAir = [-1.4357820749282837, -0.3528618812561035, 0.46169209480285645, 0.6688659191131592, -0.14883995056152344, -1.6214799880981445, 0.42180800437927246, -0.07827591896057129, -0.7930359840393066, 0.11961007118225098];
         self.postureHandReadyForStick = [1.3883118629455566, -0.2055978775024414, 1.348344087600708, 1.5386438369750977, 0.11040592193603516, 1.3759560585021973, 0.2070479393005371, -1.418992042541504, -1.5446163415908813, -0.19025802612304688]
         self.postureHandOnStick = [0.9311800003051758, -0.03072190284729004, 1.1642640829086304, 1.07230806350708, 0.34357404708862305, 0.7102000713348389, -0.07520794868469238, -0.9818019866943359, -0.8559300899505615, -0.48325204849243164]
-        self.postureReadyToPlay = []
+        self.postureReadyToPlay = [0.9511218070983887, -0.3298518657684326, 1.4725980758666992, 0.7317600250244141, -0.9296460151672363, 0.7332100868225098, 0.4754979610443115, -1.2471837997436523, -0.5890140533447266, 0.9893879890441895]
+        self.postureStickOutOfTheWay = [0.8176639080047607, -0.13810205459594727, 1.7870681285858154, 1.5355758666992188, -0.06447005271911621, 0.3451080322265625, 0.5061781406402588, -1.3837099075317383, -1.274712085723877, -0.2884340286254883]
+
         # SUBSCRIBERS FOR IMAGES
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber("/nao_robot/camera/bottom/camera/image_raw",Image,self.callback_img)
@@ -95,8 +97,6 @@ class grabSticks:
         '''Establish the coordinate Frame of the stick inrelation with aruco
         TODO: CALIBRATE USING self.showRelativeTxStickfromAruco()
         '''
-        tarAruco_Camera = [[-0.00845721015460802, 0.1552655403581574, 0.093520057441842], [0.9346952718857345, -0.03283636130211642, 0.0021888805934734187, 0.3539233404180027]]
-
         tarLStick_Aruco = [[-0.072581625212525, 0.12116529787387573, 0.011517758344727458], [0.8307618848915851, -0.12058925456751696, -0.5042605497068606, -0.20251967880570315]]
         tarRStick_Aruco = [[0.020874788973296116, 0.13886821514641357, 0.007092554727019779], [-0.2805590210808618, -0.7528074109481558, 0.3172331261893348, -0.5039154506063729]]
 
@@ -144,9 +144,9 @@ class grabSticks:
         # self.send_cartesian_armmovement(0.8,stay_stiff=True)
         #########
         self.close_hand()
-        # self.send_movement(self.postureLiftStick,2.0, True)
         self.liftStick()
-        self.send_movement(self.postureReadyToPay, 3.0, True)
+        self.send_movement(self.postureStickOutOfTheWay, 2.0, True)
+        self.send_movement(self.postureReadyToPlay, 2.0, True)
 
         # self.open_hand()
         print("finishing lift sequence")
@@ -275,16 +275,19 @@ class grabSticks:
             self.motionProxy.killAll()
             self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
             time.sleep(1)
-            self.open_hand()
-            self.motionProxy.setStiffnesses(["RHand","LHand"], [0.0,0.0])
+            # self.open_hand()
+            # self.motionProxy.setStiffnesses(["RHand","LHand"], [0.0,0.0])
             time.sleep(1)
             print("done relaxing")
 
         if self.headtouch.button is 3 and self.headtouch.state is 1: 
             print("head button 3 is press")
-            ## RUN LIFTING SEQUENCE 
-            
+            self.setInitialPose()
+            self.lifting_sequence()
 
+            # self.motionProxy.setStiffnesses(self.botharms, [0.0 for i in self.botharms])
+            # time.sleep(2)
+            # self.motionProxy.setStiffnesses(["RHand","LHand"], [0.0,0.0])
         # try:
         #     self.getStickTargetFromTorso()
         # except:

@@ -1,20 +1,25 @@
 # Hashes of file build rules.
 96547e1ed5664f73ac4e274779734aa6 /home/hrsb/MSNE_HRS/catkin_ws/devel/include/naoXophone/songName.h
+7e9cc02550caa1f290efa38920eb8f79 /home/hrsb/MSNE_HRS/catkin_ws/devel/include/naoXophone/stickCheck.h
 3255cdc1cfa11310e6f0e7ffa8e5aa71 /home/hrsb/MSNE_HRS/catkin_ws/devel/include/nao_control_tutorial_1/InterpolateJoints.h
 e41b7d8fc1f66f9ec47657f896a21873 /home/hrsb/MSNE_HRS/catkin_ws/devel/include/nao_control_tutorial_1/MoveJoints.h
 63a02d7e453a2899f22c43900653a706 /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/naoXophone/srv/__init__.py
 d059d50fafd27347338167672e4bffba /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/naoXophone/srv/_songName.py
+192e67983467054a3c9a964d29bc8166 /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/naoXophone/srv/_stickCheck.py
 9805b7acb214138bdfefb870304bd889 /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/nao_control_tutorial_1/srv/_InterpolateJoints.py
 ad0f40498c612a032abe4a9a734bedcc /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/nao_control_tutorial_1/srv/_MoveJoints.py
 6a93152db7ec9d9d76503e584353ddb6 /home/hrsb/MSNE_HRS/catkin_ws/devel/lib/python2.7/dist-packages/nao_control_tutorial_1/srv/__init__.py
 9ae36bd263f0efcfaf67f065767df2da /home/hrsb/MSNE_HRS/catkin_ws/devel/share/common-lisp/ros/naoXophone/srv/songName.lisp
+c7e350eb488896b8108f7190b936b7ab /home/hrsb/MSNE_HRS/catkin_ws/devel/share/common-lisp/ros/naoXophone/srv/stickCheck.lisp
 44c16b0594c16ee46d481b2a2f3cc090 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/common-lisp/ros/nao_control_tutorial_1/srv/InterpolateJoints.lisp
 10b5e04406929f43911e3a38c65dcca4 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/common-lisp/ros/nao_control_tutorial_1/srv/MoveJoints.lisp
 6a8b1044e332fc81140ec3d692d41e56 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/gennodejs/ros/naoXophone/srv/songName.js
+9a49626da268084b4c34a8d797a25854 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/gennodejs/ros/naoXophone/srv/stickCheck.js
 e8fb99dec34a26604757a4c9e9a2f5ef /home/hrsb/MSNE_HRS/catkin_ws/devel/share/gennodejs/ros/nao_control_tutorial_1/srv/InterpolateJoints.js
 4d1e2e95f393065286ea74d60e9345c4 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/gennodejs/ros/nao_control_tutorial_1/srv/MoveJoints.js
 35a57e2f85f3084babdafe4046887c00 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/naoXophone/manifest.l
 f8a077eb5114cbb04cc6f3a3f68fd8d2 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/naoXophone/srv/songName.l
+81010b7d961d8068ab953ee4c1465a16 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/naoXophone/srv/stickCheck.l
 03f9c05e2634ba817e1a4f9ba20455f0 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/nao_control_tutorial_1/manifest.l
 166e9e83e022a412198d81cf5801d6cb /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/nao_control_tutorial_1/srv/InterpolateJoints.l
 2c8cd1d527f52e5988b574722dd58637 /home/hrsb/MSNE_HRS/catkin_ws/devel/share/roseus/ros/nao_control_tutorial_1/srv/MoveJoints.l
@@ -27,6 +32,7 @@ aa1a373a05023a869bc0c26faa42d9f2 Tutorials/t_05_solutionfromSerg/src/nao_control
 830bea5841418bd71c13262f675bc9f5 Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1/CMakeFiles/nao_control_tutorial_1_generate_messages_nodejs
 830bea5841418bd71c13262f675bc9f5 Tutorials/t_05_solutionfromSerg/src/nao_control_tutorial_1/CMakeFiles/nao_control_tutorial_1_generate_messages_py
 11fb64eacf06ddabb0fd9360cd602d28 naoXophone/CMakeFiles/_naoXophone_generate_messages_check_deps_songName
+ff6bddbf40c31d070d511806d0e924f2 naoXophone/CMakeFiles/_naoXophone_generate_messages_check_deps_stickCheck
 ab0beb08fa793d606efc1d9b0999d05b naoXophone/CMakeFiles/naoXophone_generate_messages_cpp
 ab0beb08fa793d606efc1d9b0999d05b naoXophone/CMakeFiles/naoXophone_generate_messages_eus
 ab0beb08fa793d606efc1d9b0999d05b naoXophone/CMakeFiles/naoXophone_generate_messages_lisp

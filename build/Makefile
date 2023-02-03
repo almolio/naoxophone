@@ -816,6 +816,32 @@ tf_generate_messages_cpp/fast:
 .PHONY : tf_generate_messages_cpp/fast
 
 #=============================================================================
+# Target rules for targets named naoXophone_gennodejs
+
+# Build rule for target.
+naoXophone_gennodejs: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 naoXophone_gennodejs
+.PHONY : naoXophone_gennodejs
+
+# fast build rule for target.
+naoXophone_gennodejs/fast:
+	$(MAKE) -f naoXophone/CMakeFiles/naoXophone_gennodejs.dir/build.make naoXophone/CMakeFiles/naoXophone_gennodejs.dir/build
+.PHONY : naoXophone_gennodejs/fast
+
+#=============================================================================
+# Target rules for targets named actionlib_generate_messages_eus
+
+# Build rule for target.
+actionlib_generate_messages_eus: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 actionlib_generate_messages_eus
+.PHONY : actionlib_generate_messages_eus
+
+# fast build rule for target.
+actionlib_generate_messages_eus/fast:
+	$(MAKE) -f naoXophone/CMakeFiles/actionlib_generate_messages_eus.dir/build.make naoXophone/CMakeFiles/actionlib_generate_messages_eus.dir/build
+.PHONY : actionlib_generate_messages_eus/fast
+
+#=============================================================================
 # Target rules for targets named trajectory_msgs_generate_messages_py
 
 # Build rule for target.
@@ -970,6 +996,19 @@ naoqi_bridge_msgs_generate_messages_eus: cmake_check_build_system
 naoqi_bridge_msgs_generate_messages_eus/fast:
 	$(MAKE) -f naoXophone/CMakeFiles/naoqi_bridge_msgs_generate_messages_eus.dir/build.make naoXophone/CMakeFiles/naoqi_bridge_msgs_generate_messages_eus.dir/build
 .PHONY : naoqi_bridge_msgs_generate_messages_eus/fast
+
+#=============================================================================
+# Target rules for targets named _naoXophone_generate_messages_check_deps_stickCheck
+
+# Build rule for target.
+_naoXophone_generate_messages_check_deps_stickCheck: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _naoXophone_generate_messages_check_deps_stickCheck
+.PHONY : _naoXophone_generate_messages_check_deps_stickCheck
+
+# fast build rule for target.
+_naoXophone_generate_messages_check_deps_stickCheck/fast:
+	$(MAKE) -f naoXophone/CMakeFiles/_naoXophone_generate_messages_check_deps_stickCheck.dir/build.make naoXophone/CMakeFiles/_naoXophone_generate_messages_check_deps_stickCheck.dir/build
+.PHONY : _naoXophone_generate_messages_check_deps_stickCheck/fast
 
 #=============================================================================
 # Target rules for targets named tf2_msgs_generate_messages_py
@@ -1219,32 +1258,6 @@ actionlib_generate_messages_nodejs/fast:
 .PHONY : actionlib_generate_messages_nodejs/fast
 
 #=============================================================================
-# Target rules for targets named actionlib_generate_messages_eus
-
-# Build rule for target.
-actionlib_generate_messages_eus: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 actionlib_generate_messages_eus
-.PHONY : actionlib_generate_messages_eus
-
-# fast build rule for target.
-actionlib_generate_messages_eus/fast:
-	$(MAKE) -f naoXophone/CMakeFiles/actionlib_generate_messages_eus.dir/build.make naoXophone/CMakeFiles/actionlib_generate_messages_eus.dir/build
-.PHONY : actionlib_generate_messages_eus/fast
-
-#=============================================================================
-# Target rules for targets named naoXophone_gennodejs
-
-# Build rule for target.
-naoXophone_gennodejs: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 naoXophone_gennodejs
-.PHONY : naoXophone_gennodejs
-
-# fast build rule for target.
-naoXophone_gennodejs/fast:
-	$(MAKE) -f naoXophone/CMakeFiles/naoXophone_gennodejs.dir/build.make naoXophone/CMakeFiles/naoXophone_gennodejs.dir/build
-.PHONY : naoXophone_gennodejs/fast
-
-#=============================================================================
 # Target rules for targets named naoqi_bridge_msgs_generate_messages_cpp
 
 # Build rule for target.
@@ -1476,6 +1489,8 @@ help:
 	@echo "... sensor_msgs_generate_messages_lisp"
 	@echo "... naoXophone_generate_messages_py"
 	@echo "... tf_generate_messages_cpp"
+	@echo "... naoXophone_gennodejs"
+	@echo "... actionlib_generate_messages_eus"
 	@echo "... trajectory_msgs_generate_messages_py"
 	@echo "... trajectory_msgs_generate_messages_nodejs"
 	@echo "... trajectory_msgs_generate_messages_lisp"
@@ -1488,6 +1503,7 @@ help:
 	@echo "... nav_msgs_generate_messages_cpp"
 	@echo "... actionlib_msgs_generate_messages_lisp"
 	@echo "... naoqi_bridge_msgs_generate_messages_eus"
+	@echo "... _naoXophone_generate_messages_check_deps_stickCheck"
 	@echo "... tf2_msgs_generate_messages_py"
 	@echo "... naoqi_bridge_msgs_generate_messages_nodejs"
 	@echo "... actionlib_msgs_generate_messages_nodejs"
@@ -1507,8 +1523,6 @@ help:
 	@echo "... actionlib_msgs_generate_messages_cpp"
 	@echo "... naoqi_bridge_msgs_generate_messages_py"
 	@echo "... actionlib_generate_messages_nodejs"
-	@echo "... actionlib_generate_messages_eus"
-	@echo "... naoXophone_gennodejs"
 	@echo "... naoqi_bridge_msgs_generate_messages_cpp"
 	@echo "... tf2_msgs_generate_messages_cpp"
 	@echo "... tf2_msgs_generate_messages_lisp"

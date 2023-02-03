@@ -63,29 +63,36 @@ class learnSong:
 
     def moveToRecordingPose(self):
         
-        joint_names = ["HeadYaw", "HeadPitch", "LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll", "LWristYaw",
-                        "LHand", "LHipYawPitch", "LHipRoll", "LHipPitch", "LKneePitch", "LAnklePitch", "LAnkleRoll", "RHipYawPitch",
-                        "RHipRoll", "RHipPitch", "RKneePitch", "RAnklePitch", "RAnkleRoll", "RShoulderPitch", "RShoulderRoll",
-                        "RElbowYaw", "RElbowRoll", "RWristYaw", "RHand"]
-        angle_list = [0.013764142990112305, 0.01683211326599121, 1.745650053024292, 0.07052206993103027, -1.2303099632263184, -0.17943596839904785, -1.0032777786254883, 0.23559999465942383, -0.23926210403442383, -0.09813404083251953, -0.7899680137634277, 2.112546443939209, -1.1894419193267822, 0.07501578330993652, -0.23926210403442383, 0.0844118595123291, -0.7961878776550293, 2.112546443939209, -1.186300277709961, -0.07586973160505295, 1.5585861206054688, -0.05373191833496094, 0.3359041213989258, 0.04606199264526367, 1.64900803565979, 0.7943999767303467]
+        botharms = ["RShoulderPitch","RShoulderRoll","RElbowYaw","RElbowRoll","RWristYaw",
+                            "LShoulderPitch","LShoulderRoll","LElbowYaw","LElbowRoll","LWristYaw"]
+
+        postureStickOutOfTheWay = [0.8176639080047607, -0.13810205459594727, 1.7870681285858154, 1.5355758666992188, -0.06447005271911621, 0.3451080322265625, 0.5061781406402588, -1.3837099075317383, -1.274712085723877, -0.2884340286254883]
+        timeList = [2.0 for i in range(len(botharms))]
+        isAbsolute = True
+        self.motionProxy.angleInterpolation(botharms, postureStickOutOfTheWay,timeList, isAbsolute)
+        
+        joint_names = ["HeadYaw", "HeadPitch",                      
+                        "LHipYawPitch", "LHipRoll", "LHipPitch", 
+                        "LKneePitch", "LAnklePitch", "LAnkleRoll", "RHipYawPitch",
+                        "RHipRoll", "RHipPitch", "RKneePitch", 
+                        "RAnklePitch", "RAnkleRoll" ]
+        angle_list = [0.013764142990112305, 0.01683211326599121,      
+                    -0.23926210403442383, -0.09813404083251953, -0.7899680137634277, 
+                    2.112546443939209, -1.1894419193267822, 0.07501578330993652, -0.23926210403442383, 
+                    0.0844118595123291, -0.7961878776550293, 2.112546443939209, 
+                    -1.186300277709961, -0.07586973160505295 ]
         speed = 0.5
         self.motionProxy.setAngles(joint_names, angle_list, speed)
-        print("move to recording pose")
+        print("Moved to recording pose")
+        time.sleep(3) # Give tim eto stablelize
 
     def service_handle(self,req):
         print("service is called")
         # name  = sys.argv[1]
         name = req
-
-        dur = 40
-
-        # while not rospy.is_shutdown(): 
-            # print(time.time()-start)
-
+        dur = 10
         self.moveToRecordingPose()
     
-        # if 5 <= (time.time()-start) <= 6:
-
         print('Start Callibrating ...')
         self.callibrate()
 
@@ -93,28 +100,29 @@ class learnSong:
         while (time.time()-start) <= dur:
 
             print('Start Recording ...')
-            # print('looping after run')
             self.recordSong()
             self.rate.sleep()
 
         # if dur <=(time.time()-start) <= dur+1:
         print('End Recording ...')
-        #save song
 
+        #save song
         tones = ['red', 'orange', 'yellow', 'green', 'blue', 'white', 'lila', 'red', 'none']
         times_in_frames, tones_in_int = clean_up(self.played_tones)
-
         print('times: ', times_in_frames.astype(int))
         print('tones: ', tones_in_int.astype(int))
+        times_norm = times_in_frames/np.max(np.abs(times_in_frames))
+        times_norm[(0.6<=times_norm) &  (times_norm <= 1)]  = 3
+        times_norm[(0.3<=times_norm) &  (times_norm < 0.6)] = 2
+        times_norm[(0<=times_norm)   &  (times_norm < 0.3)] = 1
+        times_in_int = times_norm
 
         save_path = '/home/hrsb/MSNE_HRS/catkin_ws/src/naoXophone/script/songs'
-
         # Horiontal stack and tranpose
-        song_to_save = np.vstack(tones_in_int,times_in_frames).T
-
-        # np.save(os.path.join(save_path, '{}_times_fps.npy'.format(name)), times_in_frames)
-        # np.save(os.path.join(save_path, '{}_tones_int.npy'.format(name)), tones_in_int)
+        song_to_save = np.vstack((tones_in_int,times_in_int)).T
+        name = raw_input("ENTER THE SONG NAME : ")
         np.save(os.path.join(save_path, '{}.npy'.format(name)), song_to_save)
+
 
         return []
 
